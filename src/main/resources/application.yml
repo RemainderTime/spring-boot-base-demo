@@ -1,0 +1,66 @@
+
+server:
+  port: 8080
+  shutdown: graceful
+spring:
+  profiles:
+    active: dev
+  application:
+    name: spring-boot-base-demo
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      FAIL_ON_EMPTY_BEANS: false
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    auto-mapping-behavior: full
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #??SQL????
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  global-config:
+    # ??????
+    db-config:
+      update-strategy: IGNORED
+      # ???
+      logic-not-delete-value: 1
+      # ???
+      logic-delete-value: 0
+
+knife4j:
+  enable: true
+  production: false # ?????????true
+  basic:
+    enable: false # ??Swagger?Basic????,???false
+    username: lianlian # Basic?????
+    password: lianlian123 # Basic????
+swagger:
+  title: springboot基础框架
+  description: springboot基础框架
+  version: 1.0.0
+  base-package: cn.xf.springbootbasedemo.controller
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+  endpoint:
+    health:
+      show-details: always
+
+# 日志设置
+logging:
+  level:
+    root:
