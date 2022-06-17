@@ -1,5 +1,6 @@
-package cn.xf.basedemo.config;
+package cn.xf.basedemo.interceptor;
 
+import cn.xf.basedemo.interceptor.TokenInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;

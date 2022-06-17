@@ -1,70 +1,24 @@
-#spring:
-#  datasource:
-#    dynamic:
-#      primary: master
-#      strict: true #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候回抛出异常,不启动会使用默认数据源.
-#      hikari:
-#        minimum-idle: 4
-#        maximum-pool-size: 4
-#        connection-init-sql: SELECT 1
-#        connection-test-query: SELECT 1
-#      datasource:
-#        master:
-#          url: jdbc:mysql://rm-2vcg431j388xlt5541o.mysql.cn-chengdu.rds.aliyuncs.com:3306/nearby_travel?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-#          username: aliyun_test
-#          password: testRootZby!2020@
-#          driver-class-name: com.mysql.cj.jdbc.Driver
-#        slave:
-#          url: jdbc:mysql://rm-2vcg431j388xlt5541o.mysql.cn-chengdu.rds.aliyuncs.com:3306/nearby_travel?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
-#          username: aliyun_test
-#          password: testRootZby!2020@
-#          driver-class-name: com.mysql.cj.jdbc.Driver
-#  cloud:
-#    config:
-#      enabled: false
-#    consul:
-#      host: 192.168.10.111 #139.224.207.104
-#      port: 8500
-#      config:
-#        # 是否启用配置中心，默认值 true 开启
-#        enabled: false
-#      discovery:
-#        register: false # 是否需要注册
-#grpc:
-#  client:
-#    GLOBAL:
-#      security:
-#        enable-keep-alive: true
-#      keep-alive-without-calls: true
-#      negotiation-type: plaintext
-#    center-merchant:
-#      address: 'discovery:///center-merchant'
-#      # kdm 192.168.11.116
-#      # gsj 192.168.10.43
-#      # tc 192.168.9.62
-#      #      address: 'static://192.168.11.116:9999'
-#      enableKeepAlive: true
-#      keepAliveWithoutCalls: true
-#    center-user:
-#      address: 'discovery:///center-user'
-#      #      address: 'static://192.168.10.43:8888'
-#      enableKeepAlive: true
-#      keepAliveWithoutCalls: true
-#    center-ocr:
-#      address: 'discovery:///center-merchant'
-#      #      address: 'static://192.168.10.43:6566'
-#      enableKeepAlive: true
-#      keepAliveWithoutCalls: true
-#    center-contract:
-#      address: 'discovery:///center-contract'
-#      enableKeepAlive: true
-#      keepAliveWithoutCalls: true
-#    center-dataapi:
-#      address: 'static://192.168.8.126:9999'
-#      enableKeepAlive: true
-#      keepAliveWithoutCalls: true
-#
-#
+spring:
+  datasource:
+    dynamic:
+      primary: master
+      strict: true #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候回抛出异常,不启动会使用默认数据源.
+      hikari:
+        minimum-idle: 4
+        maximum-pool-size: 4
+        connection-init-sql: SELECT 1
+        connection-test-query: SELECT 1
+      datasource:
+        master:
+          url: jdbc:mysql://122.112.153.128:3306/xf-boot-base?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+        slave:
+          url: jdbc:mysql://122.112.153.128:3306/xf-boot-base?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+          username: root
+          password: 123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
 ##redis
 #redis:
 #  dynamic:
