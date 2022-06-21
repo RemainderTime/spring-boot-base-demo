@@ -19,6 +19,22 @@ spring:
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    port: 6379 #Redis服务器连接的端口
+    host: 127.0.0.1 # Redis服务器的地址
+    password: # Redis服务器连接密码（默认为空）
+    timeout: 5000ms # 连接超时时间（毫秒）
+    lettuce:   #参考博客 https://blog.csdn.net/weixin_43944305/article/details/124322595
+      pool:
+        maxActive: 5000					#最大连接数
+        maxIdle: 30						#连接池最大空闲连接数.
+        minIdle: 5						#连接池最小空闲连接数.
+        max-wait: 2000					#从连接池中获取连接时的最大等待时间
+        time-between-eviction-runs: 60s	#空闲对象逐出器线程的运行间隔时间.空闲连接线程释放周期时间.
+      cluster:
+        refresh:
+          adaptive: true        #拓扑动态感应即客户端能够根据 redis cluster 集群的变化，动态改变客户端的节点情况，完成故障转移。
+          period: 60s            #刷新redis集群状态周期时间
 
 
 global:
