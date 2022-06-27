@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>模拟登录</title>
+</head>
+<style>
+  el-input {
+    width: 200px;
+  }
+  #div1{
+    width: 200px;
+  }
+</style>
+<body>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!--jsencrypt 加密插件-->
+<script src="https://cdn.bootcdn.net/ajax/libs/jsencrypt/3.2.1/jsencrypt.min.js"></script>
+<!--http 请求插件-->
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.min.js"></script>
+
+
+<div id="app">
+  <div id="div1">
+    <label>账号：</label>
+    <el-input v-model="account" placeholder="请输入账号"></el-input>
+    <label>密码：</label>
+    <el-input v-model="pwd" placeholder="请输入密码"></el-input>
+    <el-button type="primary" @click = "login()">登录</el-button>
+  </div>
+
+</div>
+
+<script>
+  new Vue({
+    el: '#app',
+    data:{
+      rsaPublicKey: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC4iSekTzDIfhE65qaThuySiDT0hWmmaB482ZMkJdwHH66SjJh_No_z8ZeJj774CrW0dtDfvPPpyS0-L-Gjs_V2FZea7hOfUrCZf0_GKjfovC_Ch_FqbXdP3nu5w4RePjhhIvqN99HWhb9tHi6W6Mupw5Fi5i4oSgtIxGVivDC2cwIDAQAB',
+      account: '',
+      pwd: ''
+    },
+    methods:{
+      login: function () {
+        var data = {
+          account: this.account,
+          pwd: this.pwd
+        };
+        var json = JSON.stringify(data);
+        var cipher = this.encryptByPublicKey(json);
+        console.log("密文 ：" + cipher);
+
+        this.axios.get(api).then((response) => {
+          console.log(response.data)
+        })
+      },
+      encryptByPublicKey: function (val = '') {
+        if(val === ''){
+          return '';
+        }
+        let encryptor = new JSEncrypt() // 新建JSEncrypt对象
+        encryptor.setPublicKey(this.rsaPublicKey) // 设置公钥
+        return encryptor.encrypt(val) // 对需要加密的数据进行加密
+      },
+    }
+  });
+
+
+
+
+</script>
+</body>
