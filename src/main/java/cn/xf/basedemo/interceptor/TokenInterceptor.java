@@ -31,7 +31,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     private ObjectMapper objectMapper;
 
     //不拦截的请求列表
-    private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("");
+    private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("/user/login");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

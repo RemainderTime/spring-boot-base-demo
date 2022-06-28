@@ -53,9 +53,16 @@
         var cipher = this.encryptByPublicKey(json);
         console.log("密文 ：" + cipher);
 
-        this.axios.get(api).then((response) => {
-          console.log(response.data)
+        var  url = "http://localhost:8080/user/login";
+        axios.post(url, {
+          encryptedData: cipher,
         })
+                .then(function (response) {
+                  console.log(response);
+                })
+                .catch(function (error) {
+                  console.log(error);
+                });
       },
       encryptByPublicKey: function (val = '') {
         if(val === ''){

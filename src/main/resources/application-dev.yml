@@ -21,9 +21,9 @@ spring:
           driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     port: 6379 #Redis服务器连接的端口
-    host: 127.0.0.1 # Redis服务器的地址
-    password: # Redis服务器连接密码（默认为空）
-    timeout: 5000ms # 连接超时时间（毫秒）
+    host: 122.112.153.128 # Redis服务器的地址
+    password: redis # Redis服务器连接密码（默认为空）
+    timeout: 5000 # 连接超时时间（毫秒）
     lettuce:   #参考博客 https://blog.csdn.net/weixin_43944305/article/details/124322595
       pool:
         maxActive: 5000					#最大连接数
@@ -39,8 +39,8 @@ spring:
 
 global:
   rsaPublicKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC4iSekTzDIfhE65qaThuySiDT0hWmmaB482ZMkJdwHH66SjJh_No_z8ZeJj774CrW0dtDfvPPpyS0-L-Gjs_V2FZea7hOfUrCZf0_GKjfovC_Ch_FqbXdP3nu5w4RePjhhIvqN99HWhb9tHi6W6Mupw5Fi5i4oSgtIxGVivDC2cwIDAQAB
-  rsaPrivateKey: MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALiJJ6RPMMh-ETrmppOG7JKINPSFaaZoHjzZkyQl3AcfrpKMmH82j_Pxl4mPvvgKtbR20N-88-nJLT4v4aOz9XYVl5ruE59SsJl_T8YqN-i8L8KH8Wptd0_ee7nDhF4-OGEi-o330daFv20eLpboy6nDkWLmLihKC0jEZWK8MLZzAgMBAAECgYAEhO9gmcPjFRtM6vsnX8WJbSaG2oGU3rXm3Zk56Gd0ETWQRzsw2mA6JC-G4etWXcTHb6V75T-_-PpPrJKFFNItEH-WFRS36xneomycxRG1YTfK1SsGLGF0BV3bLVZx8cQz7VsBY4vqbRCSKtcOZBJpnxI6iHAv07i8w34F6qjfsQJBAORnKUuJQ_GsHHBPT1VhMYjXVepAfTrWtCzRQ648KavbHLAGaRIhX10uj-hAhZLafDqQF8Y7T7GHTlasRL9ubWsCQQDO1R3KScJJSR3KDsnSsF0YCw7V28cr_OVAwiPoro90Me6MUz9yKV88gQlTuJkNFMuu_YdPXYKjlzNVg0zFmtUZAkEAoe9mPtDeZD0TmKkSZUVYul1543C_mPTan5_qrWCoZtkd2MtiuWEB3O4DR7ZfPcQ8KcU5pektUn_NEfRndZYUawJBAJfydOoxeawBLQNODfLcYefR59owlYe5SGpktaCw7O596DPqzId_4Vk_qqx4xueXSXOLCabCmcC4yZue0_2vm7ECQQDLrzXL-BpSqxbvtE0gNKcgaSkEUSOh1QmQFPCHERsOBxcflM6ej71STKglB21JD9m6tM2RySgbtUx4TfOuJTek
-##redis
+    rsaPrivateKey: MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALiJJ6RPMMh-ETrmppOG7JKINPSFaaZoHjzZkyQl3AcfrpKMmH82j_Pxl4mPvvgKtbR20N-88-nJLT4v4aOz9XYVl5ruE59SsJl_T8YqN-i8L8KH8Wptd0_ee7nDhF4-OGEi-o330daFv20eLpboy6nDkWLmLihKC0jEZWK8MLZzAgMBAAECgYAEhO9gmcPjFRtM6vsnX8WJbSaG2oGU3rXm3Zk56Gd0ETWQRzsw2mA6JC-G4etWXcTHb6V75T-_-PpPrJKFFNItEH-WFRS36xneomycxRG1YTfK1SsGLGF0BV3bLVZx8cQz7VsBY4vqbRCSKtcOZBJpnxI6iHAv07i8w34F6qjfsQJBAORnKUuJQ_GsHHBPT1VhMYjXVepAfTrWtCzRQ648KavbHLAGaRIhX10uj-hAhZLafDqQF8Y7T7GHTlasRL9ubWsCQQDO1R3KScJJSR3KDsnSsF0YCw7V28cr_OVAwiPoro90Me6MUz9yKV88gQlTuJkNFMuu_YdPXYKjlzNVg0zFmtUZAkEAoe9mPtDeZD0TmKkSZUVYul1543C_mPTan5_qrWCoZtkd2MtiuWEB3O4DR7ZfPcQ8KcU5pektUn_NEfRndZYUawJBAJfydOoxeawBLQNODfLcYefR59owlYe5SGpktaCw7O596DPqzId_4Vk_qqx4xueXSXOLCabCmcC4yZue0_2vm7ECQQDLrzXL-BpSqxbvtE0gNKcgaSkEUSOh1QmQFPCHERsOBxcflM6ej71STKglB21JD9m6tM2RySgbtUx4TfOuJTek
+  ##redis
 #redis:
 #  dynamic:
 #    datasource:
