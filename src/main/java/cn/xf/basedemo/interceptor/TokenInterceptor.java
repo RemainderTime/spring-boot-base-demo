@@ -1,10 +1,9 @@
 package cn.xf.basedemo.interceptor;
 
-import cn.xf.basedemo.common.model.LoginUserInfo;
+import cn.xf.basedemo.common.model.LoginUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -49,7 +48,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         if(StringUtils.isEmpty(value)){
             return false;
         }
-        LoginUserInfo loginUserInfo = objectMapper.convertValue(value, LoginUserInfo.class);
+        LoginUser loginUserInfo = objectMapper.convertValue(value, LoginUser.class);
         if(loginUserInfo == null || loginUserInfo.getId() <= 0){
             return false;
         }

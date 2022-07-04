@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -22,8 +23,8 @@ import java.util.Map;
 @Slf4j
 public class JwtTokenUtils {
 
-	private String tokenSecret;
-	private int tokenExpire;
+	private static String tokenSecret;
+	private static int tokenExpire;
 
 	public JwtTokenUtils(String tokenSecret, int tokenExpire) {
 		this.tokenSecret = StringUtils.isNotEmpty(tokenSecret) ? tokenSecret : "remaindertime";
@@ -47,7 +48,7 @@ public class JwtTokenUtils {
 	 *
 	 * @param userId 用户id
 	 */
-	public String createToken(int userId) {
+	public static String createToken(int userId) {
 		try {
 			Date iatDate = new Date();
 			// expire time
@@ -82,7 +83,7 @@ public class JwtTokenUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Claim> verifyToken(String token) {
+	public static Map<String, Claim> verifyToken(String token) {
 		if (token == null) {
 			return null;
 		}
@@ -105,7 +106,7 @@ public class JwtTokenUtils {
 	 * @param token
 	 * @return userId
 	 */
-	public Integer getUserId(String token) {
+	public static Integer getUserId(String token) {
 		Map<String, Claim> claims = verifyToken(token);
 		if (claims != null) {
 			return null;

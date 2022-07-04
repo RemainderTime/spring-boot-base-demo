@@ -1,5 +1,7 @@
 package cn.xf.basedemo.service;
 
+import cn.xf.basedemo.model.res.LoginInfoRes;
+
 /**
  * @program: xf-boot-base
  * @ClassName UserService
@@ -9,5 +11,5 @@ package cn.xf.basedemo.service;
  **/
 public interface UserService {
 
-    String login(String encryptedData);
+    String login(LoginInfoRes res);
 }

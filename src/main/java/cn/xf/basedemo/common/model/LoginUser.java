@@ -10,11 +10,13 @@ import lombok.Data;
  * @create: 2022-06-17 14:54
  **/
 @Data
-public class LoginUserInfo {
+public class LoginUser {
 
     private Integer id;
 
     private String name;
+
+    private String account;
 
     private String phone;
 }

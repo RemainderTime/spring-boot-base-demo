@@ -1,13 +1,25 @@
 package cn.xf.basedemo.service.impl;
 
+import cn.xf.basedemo.common.model.LoginInfo;
+import cn.xf.basedemo.common.model.LoginUser;
+import cn.xf.basedemo.common.utils.JwtTokenUtils;
 import cn.xf.basedemo.common.utils.RSAUtils;
 import cn.xf.basedemo.config.GlobalConfig;
+import cn.xf.basedemo.mappers.UserMapper;
+import cn.xf.basedemo.model.domain.User;
+import cn.xf.basedemo.model.res.LoginInfoRes;
 import cn.xf.basedemo.service.UserService;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @program: xf-boot-base
@@ -23,24 +35,50 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private GlobalConfig globalConfig;
 
-    @Override
-    public String login(String encryptedData) {
+    @Autowired
+    private ObjectMapper objectMapper;
 
-        if(StringUtils.isEmpty(encryptedData)){
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Override
+    public String login(LoginInfoRes res) {
+
+        if (Objects.isNull(res) || StringUtils.isEmpty(res.getEncryptedData())) {
             return null;
         }
-
         String loginJson = "";
         try {
-            loginJson = RSAUtils.privateDecryption(encryptedData, RSAUtils.getPrivateKey(globalConfig.getRsaPrivateKey()));
-        }catch (Exception e){
-            log.error("解密失败------》》》");
+            loginJson = RSAUtils.privateDecryption(res.getEncryptedData(), RSAUtils.getPrivateKey(globalConfig.getRsaPrivateKey()));
+        } catch (Exception e) {
+            log.error("解密失败------", e);
         }
-        log.error("解密数据----" + loginJson);
+        LoginInfo loginInfo = objectMapper.convertValue(loginJson, LoginInfo.class);
+        if (StringUtils.isNotBlank(loginInfo.check())) {
+            return loginInfo.check();
+        }
+        //校验登录账号密码
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("account", loginInfo.getAccount());
+        queryWrapper.eq("password", loginInfo.getPwd());
+        User user = userMapper.selectOne(queryWrapper);
+        if (Objects.isNull(user)) {
+            return "账号或密码错误";
+        }
+        LoginUser loginUser = new LoginUser();
+        loginUser.setId(user.getId());
+        loginUser.setAccount(user.getAccount());
+        loginUser.setName(user.getName());
+        loginUser.setPhone(user.getPhone());
 
+        String token = JwtTokenUtils.createToken(user.getId());
 
+        redisTemplate.opsForValue().set("token:" + token, JSONObject.toJSONString(loginUser), 3600, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set("user_login_token:" + user.getId(), token, 3600, TimeUnit.SECONDS);
 
-
-        return null;
+        return "登录成功";
     }
 }

@@ -1,6 +1,6 @@
 package cn.xf.basedemo.interceptor;
 
-import cn.xf.basedemo.common.model.LoginUserInfo;
+import cn.xf.basedemo.common.model.LoginUser;
 
 /**
  * @program: xf-boot-base
@@ -11,7 +11,7 @@ import cn.xf.basedemo.common.model.LoginUserInfo;
  **/
 public class SessionContext {
 
-    private ThreadLocal<LoginUserInfo> threadLocal;
+    private ThreadLocal<LoginUser> threadLocal;
 
     private SessionContext() {
         this.threadLocal = new ThreadLocal<>();
@@ -28,11 +28,11 @@ public class SessionContext {
         return Context.INSTANCE;
     }
 
-    public void set(LoginUserInfo user) {
+    public void set(LoginUser user) {
         this.threadLocal.set(user);
     }
 
-    public LoginUserInfo get() {
+    public LoginUser get() {
         return this.threadLocal.get();
     }
 
