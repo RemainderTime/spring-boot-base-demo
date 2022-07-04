@@ -2,6 +2,7 @@ package cn.xf.basedemo.service.impl;
 
 import cn.xf.basedemo.common.model.LoginInfo;
 import cn.xf.basedemo.common.model.LoginUser;
+import cn.xf.basedemo.common.model.RetObj;
 import cn.xf.basedemo.common.utils.JwtTokenUtils;
 import cn.xf.basedemo.common.utils.RSAUtils;
 import cn.xf.basedemo.config.GlobalConfig;
@@ -11,6 +12,7 @@ import cn.xf.basedemo.model.res.LoginInfoRes;
 import cn.xf.basedemo.service.UserService;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +47,7 @@ public class UserServiceImpl implements UserService {
     private RedisTemplate redisTemplate;
 
     @Override
-    public String login(LoginInfoRes res) {
+    public RetObj login(LoginInfoRes res) {
 
         if (Objects.isNull(res) || StringUtils.isEmpty(res.getEncryptedData())) {
             return null;
@@ -56,9 +58,14 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             log.error("解密失败------", e);
         }
-        LoginInfo loginInfo = objectMapper.convertValue(loginJson, LoginInfo.class);
+        LoginInfo loginInfo = null;
+        try {
+            loginInfo = objectMapper.readValue(loginJson, LoginInfo.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         if (StringUtils.isNotBlank(loginInfo.check())) {
-            return loginInfo.check();
+            return RetObj.error(loginInfo.check());
         }
         //校验登录账号密码
         QueryWrapper queryWrapper = new QueryWrapper();
@@ -66,7 +73,7 @@ public class UserServiceImpl implements UserService {
         queryWrapper.eq("password", loginInfo.getPwd());
         User user = userMapper.selectOne(queryWrapper);
         if (Objects.isNull(user)) {
-            return "账号或密码错误";
+            return RetObj.error("账号或密码错误");
         }
         LoginUser loginUser = new LoginUser();
         loginUser.setId(user.getId());
@@ -75,10 +82,11 @@ public class UserServiceImpl implements UserService {
         loginUser.setPhone(user.getPhone());
 
         String token = JwtTokenUtils.createToken(user.getId());
+        loginUser.setToken(token);
 
         redisTemplate.opsForValue().set("token:" + token, JSONObject.toJSONString(loginUser), 3600, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set("user_login_token:" + user.getId(), token, 3600, TimeUnit.SECONDS);
 
-        return "登录成功";
+        return RetObj.success(loginUser);
     }
 }

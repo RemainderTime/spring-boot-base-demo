@@ -1,5 +1,6 @@
 package cn.xf.basedemo.controller;
 
+import cn.xf.basedemo.common.model.RetObj;
 import cn.xf.basedemo.model.res.LoginInfoRes;
 import cn.xf.basedemo.service.UserService;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -28,7 +29,7 @@ public class UserController {
     @ApiOperation(value = "用户登录", notes = "用户登录")
     @ApiOperationSupport(order = 1)
     @PostMapping("/login")
-    public String login(@RequestBody LoginInfoRes res){
+    public RetObj login(@RequestBody LoginInfoRes res){
 
         return userService.login(res);
     }

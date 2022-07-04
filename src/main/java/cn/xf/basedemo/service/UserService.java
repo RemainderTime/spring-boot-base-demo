@@ -1,5 +1,6 @@
 package cn.xf.basedemo.service;
 
+import cn.xf.basedemo.common.model.RetObj;
 import cn.xf.basedemo.model.res.LoginInfoRes;
 
 /**
@@ -11,5 +12,5 @@ import cn.xf.basedemo.model.res.LoginInfoRes;
  **/
 public interface UserService {
 
-    String login(LoginInfoRes res);
+    RetObj login(LoginInfoRes res);
 }

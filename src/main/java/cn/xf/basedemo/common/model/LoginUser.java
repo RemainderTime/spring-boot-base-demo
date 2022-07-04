@@ -19,4 +19,6 @@ public class LoginUser {
     private String account;
 
     private String phone;
+
+    private String token;
 }
