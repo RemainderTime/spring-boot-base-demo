@@ -26,6 +26,7 @@
         },
         mounted: function () {
             this.token = this.getData("token");
+            //只需要转一次码
             this.name = decodeURI(this.getData("name"));
         },
         methods: {
