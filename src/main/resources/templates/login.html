@@ -62,7 +62,9 @@
                     .then(function (response) {
                         var data = response.data;
                         if (data.code == 200) {
-                            window.location.href = "success.html?token=" + data.data.token
+
+                            var param = "?token=" + data.data.token + "&name=" + data.data.name;
+                            window.location.href = encodeURI("success.html" + param)
                         } else {
                             alert(data.message)
                         }

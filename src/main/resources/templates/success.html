@@ -9,7 +9,7 @@
 
 <body>
 <div id="app">
-    <h1>这是登录成功页面</h1>
+    <h1>欢迎 {{name}} 登录成功~~</h1>
     <h1>
         token:
         <span style="color: forestgreen">{{token}}</span>
@@ -21,10 +21,12 @@
     new Vue({
         el: '#app',
         data: {
-            token: ''
+            token: '',
+            name:''
         },
         mounted: function () {
             this.token = this.getData("token");
+            this.name = decodeURI(this.getData("name"));
         },
         methods: {
             getData: function (name) {
