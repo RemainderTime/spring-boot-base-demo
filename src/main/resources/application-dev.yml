@@ -56,18 +56,7 @@ redis:
           max-idle: 8
           min-idle: 0
       timeout: 3000ms
-#      res:
-#        database: 0
-#        host: 192.168.10.113
-#        port: 6379
-#        password: '123456'
-#        lettuce:
-#          pool:
-#            max-active: 8
-#            max-wait: -1ms
-#            max-idle: 8
-#            min-idle: 0
-#        timeout: 3000ms
+
 #oss:
 #  name: alioss
 #  endpoint: ll-oss-pre.lianlianlvyou.com
@@ -146,27 +135,4 @@ redis:
 #  pcAccessUrl: 'http://llzby.cn/s/E9TTlQrJ'
 #  customServiceUrl: 'https://chaten.soboten.com/chat/h5/v2/index.html?sysnum=caf21f78c499463fbb54077f5c4a8efd&channelid=13&source=1&groupid=d16ef9bdcf3b46dc9726bbb00a7ee45b&partnerid=' #智齿客服 + biz_userId
 #
-#merchant:
-#  personAuth-callback: http://lianlian.free.idcfengye.com/center/callback/personAuth/
-#  enterpriseAuth-callback: http://lianlian.free.idcfengye.com/center/callback/enterpriseAuth/
-#consume:
-#  third: http://lianlian.free.idcfengye.com/ll/api/order/internal/consumeOrder
-#  douyin: http://127.0.0.1:8080/ll/byteDance/pay/order/writeOff
-#protocol:
-#  user: https://debug.lianlianlvyou.com/businessapp/user-service-protocal.html # 用户服务协议
-#  privacy: https://debug.lianlianlvyou.com/businessapp/user-privacy-protocal.html # 用户隐私协议
-#guest:
-#  username: 18483679330 #游客 用户名
-#  password: 123456 #游客 密码
-#  merchantId: 402936
-#amap:
-#  key: 9e04c876425e1f9879e941ed6db8d9c4 #高德地图key
-#  poiDetailUrl: https://restapi.amap.com/v3/place/detail # 详情url
-#withdraw:
-#  termUrl: https://oasd.lianlianlvyou.com/finance/open/periodic # 周期性核销结款
-#  termSpecialUrl: https://oasd.lianlianlvyou.com/finance/open/periodic/new # 周期性核销结款
-#  preUrl: https://oasd.lianlianlvyou.com/finance/open/advance # 预付款
-#  calc: https://oasd.lianlianlvyou.com/finance/open/apply/data/treasure #计算合同可提现
-#bankUrl:
-#  branchName: https://oasd.lianlianlvyou.com/finance/open/search/bank/deposit #查询支行名称 GET bankName = ?
-#
+

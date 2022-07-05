@@ -13,7 +13,7 @@ import java.util.Date;
  * @create: 2022-07-04 14:39
  **/
 @Data
-@TableName(value = "xf-user")
+@TableName(value = "xf_user")
 public class User {
 
     private Integer id;

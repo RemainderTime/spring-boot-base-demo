@@ -23,7 +23,7 @@ import java.util.Map;
 @Slf4j
 public class JwtTokenUtils {
 
-	private static String tokenSecret;
+	private static String tokenSecret = "remaindertime";
 	private static int tokenExpire;
 
 	public JwtTokenUtils(String tokenSecret, int tokenExpire) {
