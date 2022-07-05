@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <title>登录成功</title>
+</head>
+
+<body>
+<div id="app">
+    <h1>这是登录成功页面</h1>
+    <h1>
+        token:
+        <span style="color: forestgreen">{{token}}</span>
+    </h1>
+</div>
+
+</body>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            token: ''
+        },
+        mounted: function () {
+            this.token = this.getData("token");
+        },
+        methods: {
+            getData: function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+                var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+                if (r != null) return unescape(r[2]);
+                return null; //返回参数值
+            }
+        }
+    })
+    ;
+</script>
+</html>
