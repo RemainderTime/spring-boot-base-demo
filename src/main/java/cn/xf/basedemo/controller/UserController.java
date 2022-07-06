@@ -1,10 +1,11 @@
 package cn.xf.basedemo.controller;
 
+import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.model.RetObj;
+import cn.xf.basedemo.interceptor.SessionContext;
 import cn.xf.basedemo.model.res.LoginInfoRes;
 import cn.xf.basedemo.service.UserService;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,5 +33,13 @@ public class UserController {
     public RetObj login(@RequestBody LoginInfoRes res){
 
         return userService.login(res);
+    }
+
+    @ApiOperation(value = "用户信息", notes = "用户信息")
+    @ApiOperationSupport(order = 1)
+    @PostMapping("/info")
+    public RetObj info(){
+        LoginUser loginUser = SessionContext.getInstance().get();
+        return RetObj.success(loginUser);
     }
 }

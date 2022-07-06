@@ -2,11 +2,11 @@ package cn.xf.basedemo.interceptor;
 
 import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.utils.ApplicationContextUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,9 +27,6 @@ public class TokenInterceptor implements HandlerInterceptor {
     @Autowired
     RedisTemplate<Object,Object> redisTemplate =
             (RedisTemplate<Object,Object>) ApplicationContextUtils.getBean("redisTemplate");
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     //不拦截的请求列表
     private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("/user/login","/web/login");
@@ -52,7 +49,9 @@ public class TokenInterceptor implements HandlerInterceptor {
         if(StringUtils.isEmpty(value)){
             return false;
         }
-        LoginUser loginUserInfo = objectMapper.convertValue(value, LoginUser.class);
+        JSONObject jsonObject = JSONObject.parseObject(value);
+        //JSON对象转换成Java对象
+        LoginUser loginUserInfo = JSONObject.toJavaObject(jsonObject, LoginUser.class);
         if(loginUserInfo == null || loginUserInfo.getId() <= 0){
             return false;
         }

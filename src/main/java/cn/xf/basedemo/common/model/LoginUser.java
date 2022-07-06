@@ -2,6 +2,8 @@ package cn.xf.basedemo.common.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @program: xf-boot-base
  * @ClassName LoginUserInfo
@@ -10,7 +12,7 @@ import lombok.Data;
  * @create: 2022-06-17 14:54
  **/
 @Data
-public class LoginUser {
+public class LoginUser implements Serializable {
 
     private Integer id;
 

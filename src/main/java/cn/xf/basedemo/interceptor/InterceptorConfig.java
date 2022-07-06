@@ -19,6 +19,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new TokenInterceptor()) //登录逻辑拦截类
                 .addPathPatterns("/**") //需要拦截的请求（设置的全部拦截）
-                .excludePathPatterns("/user/**","/web/**"); //忽略的请求
+                .excludePathPatterns("/user/login","/web/**"); //忽略的请求
     }
 }
