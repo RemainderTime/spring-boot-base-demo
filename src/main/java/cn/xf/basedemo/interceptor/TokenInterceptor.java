@@ -1,9 +1,11 @@
 package cn.xf.basedemo.interceptor;
 
 import cn.xf.basedemo.common.model.LoginUser;
+import cn.xf.basedemo.common.utils.ApplicationContextUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -22,15 +24,15 @@ import java.util.concurrent.TimeUnit;
  **/
 public class TokenInterceptor implements HandlerInterceptor {
 
-
     @Autowired
-    private StringRedisTemplate redisTemplate;
+    RedisTemplate<Object,Object> redisTemplate =
+            (RedisTemplate<Object,Object>) ApplicationContextUtils.getBean("redisTemplate");
 
     @Autowired
     private ObjectMapper objectMapper;
 
     //不拦截的请求列表
-    private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("/user/login");
+    private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("/user/login","/web/login");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -43,8 +45,10 @@ public class TokenInterceptor implements HandlerInterceptor {
         String token = request.getHeader("Authorization");
         if(StringUtils.isEmpty(token))
             token = request.getParameter("token");
-
-        String value = redisTemplate.opsForValue().get(token);
+        if(StringUtils.isEmpty(token)){
+            return false;
+        }
+        String value = (String) redisTemplate.opsForValue().get("token:" + token);
         if(StringUtils.isEmpty(value)){
             return false;
         }

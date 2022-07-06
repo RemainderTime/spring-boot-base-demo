@@ -24,7 +24,6 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/jsencrypt/3.2.1/jsencrypt.min.js"></script>
 <!--http 请求插件-->
 <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.min.js"></script>
-<script src="https://cdn.bootcdn.net/ajax/libs/vue-router/4.1.0-beta.2/vue-router.js"></script>
 
 
 <div id="app">
@@ -63,8 +62,8 @@
                         var data = response.data;
                         if (data.code == 200) {
                             //中文需要进行两次encodeURI转码( encodeURI:把URI字符串采用UTF-8编码格式转化成escape格式的字符串)
-                            var param = "?token=" + data.data.token + "&name=" +  encodeURI(encodeURI(data.data.name));
-                            window.location.href ="success.html" + param
+                            var param = "?token=" + data.data.token + "&name=" + encodeURI(encodeURI(data.data.name));
+                            window.location.href = "success" + param
                         } else {
                             alert(data.message)
                         }

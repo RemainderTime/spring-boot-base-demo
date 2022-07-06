@@ -63,6 +63,7 @@ public class UserServiceImpl implements UserService {
             loginInfo = objectMapper.readValue(loginJson, LoginInfo.class);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
+            return RetObj.error("账号或密码错误");
         }
         if (StringUtils.isNotBlank(loginInfo.check())) {
             return RetObj.error(loginInfo.check());

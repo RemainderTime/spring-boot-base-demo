@@ -42,20 +42,20 @@ global:
   rsaPrivateKey: MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAL8XlRALVBay7dCwRJAHP0z4YMD0C2bSpVK_AizLnryXJEuL6erdW--eaCuUvjJNueAXPJ9vYOfflw0IewG8hoa4Jjf8-nM-ozNWnGvZCUSSERf1q2clDWtZ7FLxB5m0-OmIjChCsKFPNeMP-xhSQOupLKQWmXKK9_Q1I7ZaoIF3AgMBAAECgYBxTUA61Ry0oL7U_86HP2TO9G4ZuhmQi9EucMaPXOPvmgYRLRIzCbDbMKc_P-BN3zwYnG57cgSZNz9OoPqeGvP_oVTnkoEpVkCSV-JP2p_DK09LdbDqszJXMrxAkPmWGUw8IRMcTJT1xJJcgzFE6T0CmTo-Vk47AnmqfJD4U6o74QJBAPRjVUJKZnrMSnSqKPDL2ThgTo8h7-KFxl_Z-g724lTOFiCmBpi6nCWAcuacFRrrYqxF-r9c4zdIyR7AvLROql8CQQDIK_kRF52dVtwShciZhyeUBLoi0nWV9F8mMGt60NTEER9zPEgPsv2aVn8h97KMWOwmd2Da4EPm25QxOuaKQC_pAkBczcfXp5co9KElkmR_pHl1jiTm97U3qSM-zPDHc_tYxvXiKgoBP4QCPbfkWMsu8MoEr4Jb3vMt0EcHlZtTQTgzAkAfmNla-lhV4sUgY1_T5EK6GbjsED6hag6u74u3ukkrnexR-10ApWdkumydBwV3I_464DM4uZfeVCDjWIHVpuYpAkEA6QLPztGD4V8Q1PqTEeSF3i68CKPM8vO1_mCH2JD7qsqDQcIKkczj5rTg7hlOKwB9V6gSw4CbnOF6moTooRD-cQ
 
 ##redis
-redis:
-  datasource:
-    token:
-      database: 1
-      host: 122.112.153.128
-      port: 6379
-      password: 'redis'
-      lettuce:
-        pool:
-          max-active: 8
-          max-wait: -1ms
-          max-idle: 8
-          min-idle: 0
-      timeout: 3000ms
+#redis:
+#  datasource:
+#    token:
+#      database: 1
+#      host: 122.112.153.128
+#      port: 6379
+#      password: 'redis'
+#      lettuce:
+#        pool:
+#          max-active: 8
+#          max-wait: -1ms
+#          max-idle: 8
+#          min-idle: 0
+#      timeout: 3000ms
 
 #oss:
 #  name: alioss

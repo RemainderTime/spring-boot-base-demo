@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @program: xf-boot-base
  * @ClassName UserController
- * @description:
+ * @description: 用户控制器
  * @author: xiongfeng
  * @create: 2022-06-28 09:17
  **/

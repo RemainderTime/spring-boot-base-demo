@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cn.xf</groupId>
-    <artifactId>spring-boot-base-demo</artifactId>
+    <artifactId>xf-boot-base</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring-boot-base-demo</name>
-    <description>spring-boot-base-demo</description>
+    <name>xf-boot-base</name>
+    <description>xf-boot-base</description>
     <properties>
         <java.version>1.8</java.version>
         <mybatis-plus.version></mybatis-plus.version>
@@ -97,7 +97,11 @@
             <version>2.0.8</version>
         </dependency>
 
-
+        <!--访问templates文件下的静态资源-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
 
 
     </dependencies>
