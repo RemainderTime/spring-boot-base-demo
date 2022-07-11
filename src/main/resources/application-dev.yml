@@ -10,12 +10,12 @@ spring:
         connection-test-query: SELECT 1
       datasource:
         master:
-          url: jdbc:mysql://122.112.153.128:3306/xf-boot-base?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://122.112.153.128:3306/xf-boot-base?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
         slave:
-          url: jdbc:mysql://122.112.153.128:3306/xf-boot-base?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://122.112.153.128:3306/xf-boot-base?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
