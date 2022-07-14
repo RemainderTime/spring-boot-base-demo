@@ -3,6 +3,7 @@ package cn.xf.basedemo.interceptor;
 import cn.xf.basedemo.interceptor.TokenInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -20,5 +21,17 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(new TokenInterceptor()) //登录逻辑拦截类
                 .addPathPatterns("/**") //需要拦截的请求（设置的全部拦截）
                 .excludePathPatterns("/user/login","/web/**"); //忽略的请求
+    }
+
+
+    /**
+     * 放行Knife4j请求
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+
     }
 }

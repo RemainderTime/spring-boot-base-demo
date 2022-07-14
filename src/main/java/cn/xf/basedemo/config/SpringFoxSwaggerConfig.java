@@ -1,5 +1,6 @@
 package cn.xf.basedemo.config;
 
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType;
@@ -12,15 +13,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.oas.annotations.EnableOpenApi;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,41 +36,30 @@ import java.util.List;
  * @author: xiongfeng
  * @create: 2022-06-16 16:44
  **/
-@EnableOpenApi
 @Configuration
+@EnableKnife4j
 public class SpringFoxSwaggerConfig {
 
-    /**
-     * 配置基本信息
-     * @return
-     */
     @Bean
-    public ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("Swagger Test App Restful API")
-                .description("swagger test app restful api")
-                .termsOfServiceUrl("https://github.com/RemainderTime")
-                .contact(new Contact("君燕尾","https://blog.csdn.net/qq_39818325","fairy_xingyun@hotmail.com"))
-                .version("1.0")
-                .build();
-    }
-
-    /**
-     * 配置文档生成最佳实践
-     * @param apiInfo
-     * @return
-     */
-    @Bean
-    public Docket createRestApi(ApiInfo apiInfo) {
-        return new Docket(DocumentationType.OAS_30)
-                .apiInfo(apiInfo)
-                .groupName("SwaggerGroupOneAPI")
+    public Docket createRestApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.withClassAnnotation(RestController.class))
+                .apis(RequestHandlerSelectors.basePackage("com.didiplus"))
                 .paths(PathSelectors.any())
                 .build();
     }
+    private ApiInfo apiInfo() {
+        Contact contact =new Contact("","","");
+        return new ApiInfoBuilder()
+                .title("SpringBoot项目 后台服务API接口文档")
+                .description("使用 knife4j 搭建的后台服务API接口文档")
+                .termsOfServiceUrl("http://localhost:8088/")
+                .contact(contact)
+                .version("1.0.0")
+                .build();
 
+    }
     /**
      * 增加如下配置可解决Spring Boot 6.x 与Swagger 3.0.0 不兼容问题
      **/

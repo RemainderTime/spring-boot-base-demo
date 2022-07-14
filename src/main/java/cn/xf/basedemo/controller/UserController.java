@@ -6,6 +6,7 @@ import cn.xf.basedemo.interceptor.SessionContext;
 import cn.xf.basedemo.model.res.LoginInfoRes;
 import cn.xf.basedemo.service.UserService;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author: xiongfeng
  * @create: 2022-06-28 09:17
  **/
-@RestController
+@Api(tags = "用户控制器")
+@RestController(value = "用户控制器")
 @RequestMapping("/user")
 public class UserController {
 

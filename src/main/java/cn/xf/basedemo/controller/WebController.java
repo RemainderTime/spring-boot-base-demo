@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  **/
 @Controller
 @RequestMapping("web")
-public class LoginController {
+public class WebController {
 
     /**
      * @Description 进入登录页面
