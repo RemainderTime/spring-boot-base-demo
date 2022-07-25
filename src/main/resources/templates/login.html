@@ -54,7 +54,7 @@
                 var json = JSON.stringify(data);
                 var cipher = this.encryptByPublicKey(json);
                 console.log("密文 ：" + cipher);
-                var url = "http://120.48.109.209:8089/user/login";
+                var url = "http://120.48.109.209:8088/user/login";
                 axios.post(url, {
                     encryptedData: cipher,
                 })
