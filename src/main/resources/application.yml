@@ -17,9 +17,6 @@ spring:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
       FAIL_ON_EMPTY_BEANS: false
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
 
 
 
@@ -37,19 +34,6 @@ mybatis-plus:
       logic-not-delete-value: 1
       # 删除后
       logic-delete-value: 0
-
-knife4j:
-  enable: true
-  production: false # 生产环境配置需设为true
-  basic:
-    enable: false # 开启Swagger的Basic认证功能,默认是false
-    username: lianlian # Basic认证用户名
-    password: lianlian123 # Basic认证密码
-swagger:
-  title: springboot基础框架
-  description: springboot基础框架
-  version: 1.0.0
-  base-package: cn.xf.basedemo.controller
 
 # 参考文章  https://zhuanlan.zhihu.com/p/145359625
 management:

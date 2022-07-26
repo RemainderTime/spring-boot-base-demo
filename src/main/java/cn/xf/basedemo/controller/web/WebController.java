@@ -1,8 +1,9 @@
-package cn.xf.basedemo.controller;
+package cn.xf.basedemo.controller.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * @program: xf-boot-base
@@ -34,7 +35,7 @@ public class WebController {
      * @Param [url]
      * @return java.lang.String
      **/
-    @RequestMapping(value = "/{url}")
+    @RequestMapping(value = "/{url}", method = RequestMethod.GET)
     public String skipUrl(@PathVariable(name = "url") String url) {
         return url;
     }

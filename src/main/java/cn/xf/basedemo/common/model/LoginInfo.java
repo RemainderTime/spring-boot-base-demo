@@ -1,7 +1,7 @@
 package cn.xf.basedemo.common.model;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @program: xf-boot-base

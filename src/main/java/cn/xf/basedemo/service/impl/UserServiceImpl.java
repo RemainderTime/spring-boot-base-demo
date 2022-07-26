@@ -15,10 +15,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             return RetObj.error("账号或密码错误");
         }
-        if (StringUtils.isNotBlank(loginInfo.check())) {
+        if (!StringUtils.isEmpty(loginInfo.check())) {
             return RetObj.error(loginInfo.check());
         }
         //校验登录账号密码
