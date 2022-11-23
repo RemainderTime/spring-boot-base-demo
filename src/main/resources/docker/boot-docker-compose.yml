@@ -1,0 +1,12 @@
+version: '1'
+services:
+  boot_docker_compose:
+    image: remaindertime/boot_docker_compose:v1.0.0
+    container_name: boot_docker_compose
+    environment:
+      - SERVER_ADDRESS=120.48.109.209
+      - MYSQL_NAME=root
+      - MYSQL_PWD=123456
+      - REDIS_PWD=123456
+    ports:
+      - 8090:8088
