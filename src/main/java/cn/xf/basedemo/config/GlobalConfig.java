@@ -25,4 +25,10 @@ public class GlobalConfig {
      * rsa 私匙
      */
     private String rsaPrivateKey;
+
+    private String openAIKey;
+
+    private Integer openAIRetries;
+
+    private String openAIModel;
 }

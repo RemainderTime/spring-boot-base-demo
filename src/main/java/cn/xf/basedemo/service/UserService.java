@@ -13,4 +13,6 @@ import cn.xf.basedemo.model.res.LoginInfoRes;
 public interface UserService {
 
     RetObj login(LoginInfoRes res);
+
+    RetObj sendChat(String content);
 }

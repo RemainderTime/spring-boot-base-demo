@@ -1,9 +1,11 @@
 package cn.xf.basedemo.service.impl;
 
+import cn.xf.basedemo.common.model.ChatGPTProperties;
 import cn.xf.basedemo.common.model.LoginInfo;
 import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.model.RetObj;
 import cn.xf.basedemo.common.utils.JwtTokenUtils;
+import cn.xf.basedemo.common.utils.OpenAIUtils;
 import cn.xf.basedemo.common.utils.RSAUtils;
 import cn.xf.basedemo.config.GlobalConfig;
 import cn.xf.basedemo.mappers.UserMapper;
@@ -14,12 +16,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.theokanning.openai.OpenAiService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -89,5 +94,24 @@ public class UserServiceImpl implements UserService {
         redisTemplate.opsForValue().set("user_login_token:" + user.getId(), token, 3600, TimeUnit.SECONDS);
 
         return RetObj.success(loginUser);
+    }
+
+    @Override
+    public RetObj sendChat(String content) {
+        if(StringUtils.isEmpty(content)){
+            return RetObj.error("内容不能为空");
+        }
+        OpenAiService openAiService = new OpenAiService(globalConfig.getOpenAIKey());
+        ChatGPTProperties chatGPTProperties = new ChatGPTProperties();
+        chatGPTProperties.setModel(globalConfig.getOpenAIModel());
+        chatGPTProperties.setToken(globalConfig.getRsaPublicKey());
+        chatGPTProperties.setRetries(Integer.valueOf(globalConfig.getOpenAIRetries()));
+//        OpenAiService openAiService = new OpenAiService("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");
+//        ChatGPTProperties chatGPTProperties = new ChatGPTProperties();
+//        chatGPTProperties.setModel("text-davinci-003");
+//        chatGPTProperties.setToken("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");
+//        chatGPTProperties.setRetries(20);
+        String answer = OpenAIUtils.getAnswer(openAiService, chatGPTProperties, content);
+        return RetObj.success(answer);
     }
 }

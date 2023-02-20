@@ -110,6 +110,13 @@
             <version>5.3</version>
         </dependency>
 
+        <!--openai-->
+        <dependency>
+            <groupId>com.theokanning.openai-gpt3-java</groupId>
+            <artifactId>client</artifactId>
+            <version>0.10.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

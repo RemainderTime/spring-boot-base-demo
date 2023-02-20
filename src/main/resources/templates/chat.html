@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>你问我答</title>
+</head>
+<body>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<!--jsencrypt 加密插件-->
+<script src="https://cdn.bootcdn.net/ajax/libs/jsencrypt/3.2.1/jsencrypt.min.js"></script>
+<!--http 请求插件-->
+<script src="https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.min.js"></script>
+
+<dev id="app">
+    <dev id="dev1">
+        <el-input id="content"
+                  type="textarea"
+                  :rows="2"
+                  placeholder="请输入内容"
+                  v-model="content">
+        </el-input>
+        <el-button id="send" type="primary" @click="send()">发送</el-button>
+    </dev>
+    <dev id="dev4">
+        <el-input id="result"
+                  type="textarea"
+                  :rows="2"
+                  placeholder="结果...."
+                  v-model="resultData">
+        </el-input>
+    </dev>
+
+</dev>
+
+<style type="text/css">
+
+    #content {
+        width: 500px;
+    }
+
+    #result {
+        width: 500px;
+    }
+
+</style>
+
+<script type="application/javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            content: '',
+            resultData: ''
+        },
+        methods: {
+            send: function () {
+                if (this.content == "" || this.content == undefined) {
+                    alert("请输入问题")
+                    return;
+                }
+                console.error("哈哈哈哈")
+                var url = "http://localhost:8088/chat/send";
+                axios.post(url, {
+                    content: this.content
+                }).then(function (response) {
+                    console.log("嘻嘻")
+                    var data = response
+                    console.log(response)
+                    if (data.code == 200) {
+                        this.resultData = data.answer
+                    } else {
+                        alert(data.message)
+                    }
+                })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        }
+    });
+
+
+</script>
+
+<sty
+
+</body>
+</html>
