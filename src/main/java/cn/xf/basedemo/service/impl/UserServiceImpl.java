@@ -106,11 +106,6 @@ public class UserServiceImpl implements UserService {
         chatGPTProperties.setModel(globalConfig.getOpenAIModel());
         chatGPTProperties.setToken(globalConfig.getRsaPublicKey());
         chatGPTProperties.setRetries(Integer.valueOf(globalConfig.getOpenAIRetries()));
-//        OpenAiService openAiService = new OpenAiService("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");
-//        ChatGPTProperties chatGPTProperties = new ChatGPTProperties();
-//        chatGPTProperties.setModel("text-davinci-003");
-//        chatGPTProperties.setToken("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");
-//        chatGPTProperties.setRetries(20);
         String answer = OpenAIUtils.getAnswer(openAiService, chatGPTProperties, content);
         return RetObj.success(answer);
     }
