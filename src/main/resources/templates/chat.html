@@ -17,21 +17,22 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.min.js"></script>
 
 <dev id="app">
+    <h2>欢迎您 <label style="color: hotpink;"> {{name}} </label> 随便说点什么吧~~</h2>
     <dev id="dev1">
         <el-input id="content"
                   type="textarea"
                   :rows="2"
-                  placeholder="请输入内容"
+                  placeholder="说点什么吧"
                   v-model="content">
         </el-input>
-        <el-button id="send" type="primary" @click="send()">发送</el-button>
+        <el-button type="primary" :loading="sendStatus" @click="send()">发送</el-button>
     </dev>
     <dev id="dev4">
         <el-input id="result"
                   type="textarea"
-                  :rows="2"
+                  :autosize="{ minRows: 2, maxRows: 4}"
                   placeholder="结果...."
-                  v-model="resultData">
+                  v-model="outContent">
         </el-input>
     </dev>
 
@@ -54,7 +55,13 @@
         el: '#app',
         data: {
             content: '',
-            resultData: ''
+            outContent: '',
+            sendStatus: false,
+            name: ''
+        },
+        mounted: function () {
+            //只需要转一次码
+            this.name = decodeURI(this.getData("name"));
         },
         methods: {
             send: function () {
@@ -62,31 +69,40 @@
                     alert("请输入问题")
                     return;
                 }
-                console.error("哈哈哈哈")
-                var url = "http://localhost:8088/chat/send";
+                var that = this;
+                that.sendStatus = true
+                var url = "http://localhost:8089/chat/send";
                 axios.post(url, {
-                    content: this.content
+                    content: this.content,
+                    name: this.name
                 }).then(function (response) {
-                    console.log("嘻嘻")
-                    var data = response
-                    console.log(response)
+                    var data = response.data
+                    console.log(data)
                     if (data.code == 200) {
-                        this.resultData = data.answer
+                        console.log(data.data)
+                        that.outContent = data.data
+                        that.sendStatus = false
                     } else {
+                        that.sendStatus = false
                         alert(data.message)
                     }
                 })
                     .catch(function (error) {
+                        that.sendStatus = false
                         console.log(error);
                     });
+            },
+            getData: function (name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+                var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+                if (r != null) return unescape(r[2]);
+                return null; //返回参数值
             }
         }
     });
 
 
 </script>
-
-<sty
 
 </body>
 </html>

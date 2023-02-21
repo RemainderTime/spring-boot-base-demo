@@ -61,10 +61,10 @@ public class OpenAIUtils {
 
     public static void main(String[] args) {
         GlobalConfig globalConfig =new GlobalConfig();
-        OpenAiService openAiService = new OpenAiService("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");
+        OpenAiService openAiService = new OpenAiService("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");
         ChatGPTProperties chatGPTProperties = new ChatGPTProperties();
         chatGPTProperties.setModel("text-davinci-003");
-        chatGPTProperties.setToken("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");
+        chatGPTProperties.setToken("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");
         chatGPTProperties.setRetries(20);
         String answer = OpenAIUtils.getAnswer(openAiService, chatGPTProperties, "你好");
         Map<String, Object> map = new HashMap<>();

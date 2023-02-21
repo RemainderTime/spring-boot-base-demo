@@ -1,6 +1,6 @@
 
 server:
-  port: 8088
+  port: 8089
   shutdown: graceful
 spring:
   profiles:

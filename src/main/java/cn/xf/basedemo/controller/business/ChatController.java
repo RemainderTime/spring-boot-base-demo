@@ -3,6 +3,7 @@ package cn.xf.basedemo.controller.business;
 import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.model.RetObj;
 import cn.xf.basedemo.interceptor.SessionContext;
+import cn.xf.basedemo.model.res.ChatRes;
 import cn.xf.basedemo.service.UserService;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.Api;
@@ -28,9 +29,9 @@ public class ChatController {
     @ApiOperation(value = "发送信息", notes = "发送信息")
     @ApiOperationSupport(order = 1)
     @PostMapping("/send")
-    public RetObj sendChat(@RequestBody String content){
+    public RetObj sendChat(@RequestBody ChatRes res){
 
-        return userService.sendChat(content);
+        return userService.sendChat(res.getContent(), res.getName());
     }
 
 }

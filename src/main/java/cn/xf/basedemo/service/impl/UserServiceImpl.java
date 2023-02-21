@@ -8,7 +8,9 @@ import cn.xf.basedemo.common.utils.JwtTokenUtils;
 import cn.xf.basedemo.common.utils.OpenAIUtils;
 import cn.xf.basedemo.common.utils.RSAUtils;
 import cn.xf.basedemo.config.GlobalConfig;
+import cn.xf.basedemo.mappers.MessageMapper;
 import cn.xf.basedemo.mappers.UserMapper;
+import cn.xf.basedemo.model.domain.Message;
 import cn.xf.basedemo.model.domain.User;
 import cn.xf.basedemo.model.res.LoginInfoRes;
 import cn.xf.basedemo.service.UserService;
@@ -23,6 +25,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.security.auth.login.LoginContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -47,6 +50,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -97,10 +103,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public RetObj sendChat(String content) {
+    public RetObj sendChat(String content, String name) {
         if(StringUtils.isEmpty(content)){
             return RetObj.error("内容不能为空");
         }
+        Message message =new Message();
+        message.setName(name);
+        message.setContent(content);
+        messageMapper.insert(message);
+
         OpenAiService openAiService = new OpenAiService(globalConfig.getOpenAIKey());
         ChatGPTProperties chatGPTProperties = new ChatGPTProperties();
         chatGPTProperties.setModel(globalConfig.getOpenAIModel());

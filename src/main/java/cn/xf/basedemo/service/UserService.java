@@ -14,5 +14,5 @@ public interface UserService {
 
     RetObj login(LoginInfoRes res);
 
-    RetObj sendChat(String content);
+    RetObj sendChat(String content, String name);
 }
