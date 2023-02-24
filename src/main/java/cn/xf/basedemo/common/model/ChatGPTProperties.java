@@ -10,7 +10,7 @@ package cn.xf.basedemo.common.model;
 public class ChatGPTProperties {
 
     private String token;
-    private String model = "text-davinci-003";
+    private String model;
     private Integer retries = 5;
 
     public ChatGPTProperties() {

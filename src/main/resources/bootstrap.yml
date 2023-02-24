@@ -1,0 +1,14 @@
+
+spring:
+  application:
+    name: boot-openai
+  cloud:
+    nacos:
+      config:
+        server-addr: 120.48.109.209:8848
+        file-extension: yml
+        namespace: 4bd9e4ab-91f8-4744-bc71-51291c1fd9be
+        group: DEFAULT_GROUP
+      discovery:
+        server-addr: 120.48.109.209:8848
+        namespace: 4bd9e4ab-91f8-4744-bc71-51291c1fd9be

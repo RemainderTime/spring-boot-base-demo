@@ -5,8 +5,6 @@ server:
 spring:
   profiles:
     active: dev
-  application:
-    name: xf-boot-base
   servlet:
     multipart:
       max-file-size: 20MB
@@ -17,7 +15,6 @@ spring:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
       FAIL_ON_EMPTY_BEANS: false
-
 
 
 mybatis-plus:
