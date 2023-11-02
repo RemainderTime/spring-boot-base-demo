@@ -10,18 +10,18 @@ spring:
         connection-test-query: SELECT 1
       datasource:
         master: #${SERVER_ADDRESS}
-          url: jdbc:mysql://117.72.35.70:3307/xf-boot-base?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://172.16.0.3:3307/xf-boot-base?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
         slave:
-          url: jdbc:mysql://117.72.35.70:3307/xf-boot-base?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://172.16.0.3:3307/xf-boot-base?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
           username: root
           password: 123456
           driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     port: 6379 #Redis服务器连接的端口
-    host: 117.72.35.70 # Redis服务器的地址
+    host: 172.16.0.3 # Redis服务器的地址
     password: 123456 # Redis服务器连接密码（默认为空）
     timeout: 5000 # 连接超时时间（毫秒）
     lettuce:   #参考博客 https://blog.csdn.net/weixin_43944305/article/details/124322595
