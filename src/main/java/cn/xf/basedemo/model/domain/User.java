@@ -1,5 +1,6 @@
 package cn.xf.basedemo.model.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
@@ -26,5 +27,6 @@ public class User {
 
     private String phone;
 
+    @TableField(value = "create_time")
     private Date createTime;
 }
