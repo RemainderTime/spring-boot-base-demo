@@ -1,5 +1,7 @@
 package cn.xf.basedemo.interceptor;
 
+import cn.xf.basedemo.common.exception.LoginException;
+import cn.xf.basedemo.common.exception.ResponseCode;
 import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.utils.ApplicationContextUtils;
 import com.alibaba.fastjson.JSONObject;
@@ -42,17 +44,17 @@ public class TokenInterceptor implements HandlerInterceptor {
         if(StringUtils.isEmpty(token))
             token = request.getParameter("token");
         if(StringUtils.isEmpty(token)){
-            return false;
+            throw new LoginException("请先登录");
         }
         String value = (String) redisTemplate.opsForValue().get("token:" + token);
         if(StringUtils.isEmpty(value)){
-            return false;
+            throw new LoginException();
         }
         JSONObject jsonObject = JSONObject.parseObject(value);
         //JSON对象转换成Java对象
         LoginUser loginUserInfo = JSONObject.toJavaObject(jsonObject, LoginUser.class);
         if(loginUserInfo == null || loginUserInfo.getId() <= 0){
-            return false;
+            throw new LoginException(ResponseCode.USER_INPUT_ERROR);
         }
         redisTemplate.expire(token, 86700, TimeUnit.SECONDS);
 
