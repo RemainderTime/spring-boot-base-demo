@@ -60,8 +60,8 @@ public class JwtTokenUtils {
 			// build token
 			// param backups {iss:Service, aud:APP}
 			String token = JWT.create().withHeader(map)
-					.withClaim("iss", "ll-app-business")
-					.withClaim("aud", "APP")
+					.withClaim("iss", "xf-boot-base")
+					.withClaim("aud", "demo")
 					.withClaim(USER_ID, String.valueOf(userId))
 					.withIssuedAt(iatDate)
 //				    .withExpiresAt(expiresDate)

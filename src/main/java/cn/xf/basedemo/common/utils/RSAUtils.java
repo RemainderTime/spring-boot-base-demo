@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @program: xf-boot-base
  * @ClassName RSAUtils
- * @description:
+ * @description: 加密工具类
  * @author: xiongfeng
  * @create: 2022-06-20 10:37
  **/
