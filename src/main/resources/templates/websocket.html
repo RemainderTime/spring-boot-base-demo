@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <title>登录成功</title>
+</head>
+
+<body>
+<div id="app">
+    <div>
+        <button @click="connectToServer">Connect to Server</button>
+        <button @click="sendByteData">Send Byte Data</button>
+    </div>
+</div>
+
+</body>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            ws: null
+        },
+        methods: {
+            connectToServer() {
+                this.ws = new WebSocket("ws://127.0.0.1:7397"); // 替换为你的服务器地址和端口号
+
+                this.ws.binaryType = "arraybuffer"; // 设置 WebSocket 接收的数据类型为 ArrayBuffer
+
+                this.ws.onopen = () => {
+                    console.log("WebSocket connected!");
+                };
+
+                this.ws.onmessage = event => {
+                    console.log("Received message from server:", event.data);
+                    // 处理从服务器接收到的消息
+                };
+
+                this.ws.onerror = error => {
+                    console.error("WebSocket error:", error);
+                };
+
+                this.ws.onclose = event => {
+                    console.log("WebSocket closed:", event);
+                };
+            },
+            sendByteData() {
+                if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+                    const instruction = 1; // 替换为你的指令数据
+
+                    // 创建一个 ArrayBuffer 对象并填充指令、字节流长度和字节流数据
+                    const byteArray = new Uint8Array(["q", "q", "q"]); // 替换为你的字节数据
+                    const buffer = new ArrayBuffer(byteArray.length + 5); // 5个字节分别用于存储指令和数据长度
+                    const view = new DataView(buffer);
+
+                    // 写入指令到 ArrayBuffer
+                    view.setUint8(0, instruction);
+
+                    // 写入数据长度到 ArrayBuffer
+                    view.setInt32(1, byteArray.length);
+
+                    // 写入字节流数据到 ArrayBuffer
+                    for (let i = 0; i < byteArray.length; i++) {
+                        view.setUint8(i + 5, byteArray[i]);
+                    }
+
+                    // 发送 ArrayBuffer 数据
+                    this.ws.send(buffer);
+                } else {
+                    console.error("WebSocket connection not established!");
+                }
+            }
+        }
+    })
+    ;
+</script>
+</html>

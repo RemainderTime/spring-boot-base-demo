@@ -28,6 +28,11 @@ public class WebController {
         return "login";
     }
 
+    @RequestMapping(value = "/websocket")
+    public String websocket() {
+        return "websocket";
+    }
+
     /**
      * @Description 静态页面跳转统一入口
      * @Author xiongfeng
