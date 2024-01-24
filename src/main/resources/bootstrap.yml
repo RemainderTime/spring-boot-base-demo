@@ -5,14 +5,14 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 117.72.35.70:8848
-        file-extension: yaml
+        server-addr: 172.16.0.3:8848
+        file-extension: yml
         namespace: 7e913a24-bf7a-4628-9dcf-96ac79800c9f
         group: DEFAULT_GROUP
         username: nacos
         password: nacos
       discovery:
-        server-addr: 117.72.35.70:8848
+        server-addr: 172.16.0.3:8848
         namespace: 7e913a24-bf7a-4628-9dcf-96ac79800c9f
         username: nacos
         password: nacos
