@@ -1,8 +1,6 @@
 package cn.xf.basedemo.config;
 
 import com.baomidou.dynamic.datasource.plugin.MasterSlaveAutoRoutingPlugin;
-import com.baomidou.mybatisplus.extension.plugins.OptimisticLockerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.pagination.optimize.JsqlParserCountOptimize;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Bean;
