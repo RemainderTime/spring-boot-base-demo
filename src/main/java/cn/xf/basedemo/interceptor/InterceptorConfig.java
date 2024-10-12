@@ -1,5 +1,6 @@
 package cn.xf.basedemo.interceptor;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -15,16 +16,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
+    @Bean
+    public TokenInterceptor tokenInterceptor() {
+        return new TokenInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new TokenInterceptor()) //登录逻辑拦截类
+        registry.addInterceptor(tokenInterceptor()) //登录逻辑拦截类
                 .addPathPatterns("/**") //需要拦截的请求（设置的全部拦截）
-                .excludePathPatterns("/user/login","/web/**"); //忽略的请求
+                .excludePathPatterns("/user/login", "/web/**"); //忽略的请求
     }
 
 
     /**
      * 放行Knife4j请求
+     *
      * @param registry
      */
     @Override

@@ -18,7 +18,16 @@ spring:
       WRITE_DATES_AS_TIMESTAMPS: false
       FAIL_ON_EMPTY_BEANS: false
 
-
+springdoc:
+  api-docs:
+    path: /v3/api-docs # 自定义 API 文档路径
+  swagger-ui:
+    path: /swagger-ui.html # 自定义 Swagger UI 路径
+    enabled: true
+  info:
+    title: 文撩 API 文档
+    description: 这是文撩平台的 API 文档
+    version: v1.0
 
 mybatis-plus:
   configuration:

@@ -19,22 +19,23 @@ spring:
           username: ${MYSQL_NAME}
           password: ${MYSQL_PWD}
           driver-class-name: com.mysql.cj.jdbc.Driver
-  redis:
-    port: 6379 #Redis服务器连接的端口
-    host: ${SERVER_ADDRESS} # Redis服务器的地址
-    password: ${REDIS_PWD} # Redis服务器连接密码（默认为空）
-    timeout: 5000 # 连接超时时间（毫秒）
-    lettuce:   #参考博客 https://blog.csdn.net/weixin_43944305/article/details/124322595
-      pool:
-        maxActive: 5000					#最大连接数
-        maxIdle: 30						#连接池最大空闲连接数.
-        minIdle: 5						#连接池最小空闲连接数.
-        max-wait: 2000					#从连接池中获取连接时的最大等待时间
-        time-between-eviction-runs: 60s	#空闲对象逐出器线程的运行间隔时间.空闲连接线程释放周期时间.
-      cluster:
-        refresh:
-          adaptive: true        #拓扑动态感应即客户端能够根据 redis cluster 集群的变化，动态改变客户端的节点情况，完成故障转移。
-          period: 60s            #刷新redis集群状态周期时间
+  data:
+    redis:
+      port: 6379 #Redis服务器连接的端口
+      host: ${SERVER_ADDRESS} # Redis服务器的地址
+      password: ${REDIS_PWD} # Redis服务器连接密码（默认为空）
+      timeout: 5000 # 连接超时时间（毫秒）
+      lettuce:   #参考博客 https://blog.csdn.net/weixin_43944305/article/details/124322595
+        pool:
+          maxActive: 5000					#最大连接数
+          maxIdle: 30						#连接池最大空闲连接数.
+          minIdle: 5						#连接池最小空闲连接数.
+          max-wait: 2000					#从连接池中获取连接时的最大等待时间
+          time-between-eviction-runs: 60s	#空闲对象逐出器线程的运行间隔时间.空闲连接线程释放周期时间.
+        cluster:
+          refresh:
+            adaptive: true        #拓扑动态感应即客户端能够根据 redis cluster 集群的变化，动态改变客户端的节点情况，完成故障转移。
+            period: 60s            #刷新redis集群状态周期时间
 
 global:
   rsaPublicKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC_F5UQC1QWsu3QsESQBz9M-GDA9Atm0qVSvwIsy568lyRLi-nq3VvvnmgrlL4yTbngFzyfb2Dn35cNCHsBvIaGuCY3_PpzPqMzVpxr2QlEkhEX9atnJQ1rWexS8QeZtPjpiIwoQrChTzXjD_sYUkDrqSykFplyivf0NSO2WqCBdwIDAQAB

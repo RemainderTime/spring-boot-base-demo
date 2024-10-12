@@ -2,6 +2,7 @@ package cn.xf.basedemo.common.utils;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
 import java.security.*;
@@ -34,14 +35,15 @@ public class RSAUtils {
 
     /**
      * 创建rsa密匙对
+     *
      * @return
      */
-    private static Map<String, String> createEncryptKey(){
+    private static Map<String, String> createEncryptKey() {
 
         KeyPairGenerator kpg;
         try {
             kpg = KeyPairGenerator.getInstance(RSA);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalArgumentException();
         }
         kpg.initialize(ENCRYPT_SIZE);
@@ -52,7 +54,7 @@ public class RSAUtils {
         PrivateKey aPrivate = keyPair.getPrivate();
         String privateKey = Base64.encodeBase64URLSafeString(aPrivate.getEncoded());
 
-        Map<String, String> map =new HashMap<>();
+        Map<String, String> map = new HashMap<>();
 
         map.put("publicKey", publicKey);
         map.put("privateKey", privateKey);
@@ -62,6 +64,7 @@ public class RSAUtils {
 
     /**
      * 获取ras公匙
+     *
      * @param publicKeyStr 公匙加密字符串
      * @return
      * @throws NoSuchAlgorithmException
@@ -77,6 +80,7 @@ public class RSAUtils {
 
     /**
      * 获取ras私匙
+     *
      * @param privateKeyStr 私匙加密字符串
      * @return
      * @throws NoSuchAlgorithmException
@@ -91,12 +95,13 @@ public class RSAUtils {
     }
 
     /**
-     *  公匙加密
-     * @param data 字符串
+     * 公匙加密
+     *
+     * @param data      字符串
      * @param publicKey
      * @return
      */
-    public static String publicEncrypt(String data, RSAPublicKey publicKey){
+    public static String publicEncrypt(String data, RSAPublicKey publicKey) {
 
         try {
 
@@ -106,19 +111,19 @@ public class RSAUtils {
             byte[] bytes = cipher.doFinal(data.getBytes());
             return Base64.encodeBase64URLSafeString(bytes);
 //            return Base64.encodeBase64URLSafeString(rsaSplitCodec(cipher, Cipher.ENCRYPT_MODE, data.getBytes(CHARSET), publicKey.getModulus().bitLength()));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException();
         }
     }
 
-    public static String privateDecryption(String data, RSAPrivateKey privateKey){
+    public static String privateDecryption(String data, RSAPrivateKey privateKey) {
         try {
             Cipher cipher = Cipher.getInstance(RSA);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
 //            byte[] bytes = cipher.doFinal(Base64.decodeBase64(data.getBytes(CHARSET)));
 //            return new String(bytes);
-            return new String(rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, Base64.decodeBase64(data.getBytes(CHARSET)), privateKey.getModulus().bitLength()), CHARSET);
+            return new String(rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, Base64.decodeBase64(data.getBytes(CHARSET), 0, data.getBytes(CHARSET).length), privateKey.getModulus().bitLength()), CHARSET);
         } catch (Exception e) {
             throw new RuntimeException("解密字符串[" + data + "]时遇到异常", e);
         }
@@ -178,13 +183,12 @@ public class RSAUtils {
 //            String s1 = privateDecryption(ss, getPrivateKey(privateKey1));
 //            System.out.println("解密后明文：" + s1);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new IllegalArgumentException();
         }
 
 
     }
-
 
 
 }
