@@ -1,5 +1,6 @@
 package cn.xf.basedemo.common.exception;
 
+import cn.xf.basedemo.common.enums.SystemStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -81,6 +82,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
             errors.put(error.getField(), error.getDefaultMessage());
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * 其他异常捕获
+     * @param request
+     * @param e
+     * @param response
+     * @return
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity exceptionHandler(jakarta.servlet.http.HttpServletRequest request, final Exception e, jakarta.servlet.http.HttpServletResponse response) {
+        Map<String, String> errors = new HashMap<>();
+        errors.put("message", e.getMessage());
+        return ResponseEntity.status(SystemStatus.ERROR.getCode()).body(errors);
     }
 
 }
