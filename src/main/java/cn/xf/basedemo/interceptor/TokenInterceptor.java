@@ -32,13 +32,15 @@ public class TokenInterceptor implements HandlerInterceptor {
 
 
     //不拦截的请求列表
-    private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("/user/login", "/web/login");
+    private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("/user/login", "/web/login","/swagger-ui.html","/v3/api-docs","/swagger-ui/index.html");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         String requestURI = request.getRequestURI();
-        if (EXCLUDE_PATH_LIST.contains(requestURI)) {
+        if (EXCLUDE_PATH_LIST.contains(requestURI) ||
+                requestURI.contains("/swagger-ui") ||
+                requestURI.contains("/v3/api-docs")) {
             return true;
         }
         //登录处理

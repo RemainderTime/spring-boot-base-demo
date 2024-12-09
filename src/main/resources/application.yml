@@ -55,6 +55,6 @@ management:
       show-details: always
 
 # 日志设置
-logging:
-  level:
-    root:
+#logging:
+#  level:
+#    root: DEBUG

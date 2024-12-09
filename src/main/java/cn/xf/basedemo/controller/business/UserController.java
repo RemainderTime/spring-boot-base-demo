@@ -6,6 +6,9 @@ import cn.xf.basedemo.interceptor.SessionContext;
 import cn.xf.basedemo.model.res.LoginInfoRes;
 import cn.xf.basedemo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @RestController(value = "用户控制器")
 @RequestMapping("/user")
+@Tag(name = "用户控制器")
 public class UserController {
 
     @Autowired
