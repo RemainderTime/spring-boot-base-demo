@@ -145,6 +145,13 @@
             <scope>provided</scope> <!-- 在Web服务器环境中由服务器提供 -->
         </dependency>
 
+        <!-- elasticsearch8.x 搜索引擎 -->
+        <dependency>
+            <groupId>co.elastic.clients</groupId>
+            <artifactId>elasticsearch-java</artifactId>
+            <version>8.16.0</version>
+        </dependency>
+
 
     </dependencies>
 
