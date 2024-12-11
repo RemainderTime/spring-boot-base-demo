@@ -7,10 +7,17 @@ import lombok.Data;
  * @author remaindertime
  * @className EsModel
  * @date 2024/12/10
- * @description
+ * @description es基础模型
  */
 @Data
-public class EsModel<T> {
+public class EsBaseModel<T> {
+
+    public EsBaseModel(String indexName, String documentId, T documentModel, Class<T> clazz) {
+        this.indexName = indexName;
+        this.documentId = documentId;
+        this.documentModel = documentModel;
+        this.clazz = clazz;
+    }
 
     /**
      * 索引名称
@@ -31,4 +38,5 @@ public class EsModel<T> {
      * 映射对象类对象
      */
     private Class<T> clazz;
+
 }

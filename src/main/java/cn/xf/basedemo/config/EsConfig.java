@@ -9,8 +9,6 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.nio.reactor.IOReactorConfig;
-import org.elasticsearch.client.Node;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +23,7 @@ import org.springframework.stereotype.Component;
  * @description es工具类
  */
 @Component
-public class ElasticsearchConfig {
+public class EsConfig {
 
     @Value("${elasticsearch.host}")
     private String elasticsearchHost;
@@ -52,43 +50,19 @@ public class ElasticsearchConfig {
                 AuthScope.ANY,
                 new UsernamePasswordCredentials(username, password)
         );
+
         // 自定义 RestClientBuilder 配置
         RestClientBuilder restClientBuilder = RestClient.builder(
-                new HttpHost(elasticsearchHost, elasticsearchPort, "http") // Elasticsearch 节点地址
+                new HttpHost(elasticsearchHost, elasticsearchPort, "http")
         ).setHttpClientConfigCallback(httpClientBuilder ->
-                httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider)  // 配置认证信息
+                httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider) // 配置认证信息
         );
-
-        // 配置异步连接数和线程数
-        restClientBuilder.setHttpClientConfigCallback(httpAsyncClientBuilder ->
-                httpAsyncClientBuilder
-                        // 设置最大连接数和每个节点的最大连接数
-                        .setMaxConnTotal(1200) // 总连接数：最多可以与所有节点同时保持 1200 个连接
-                        .setMaxConnPerRoute(100) // 每个节点最大连接数：对于每个节点允许最多 100 个并发连接
-                        // 设置 IO 线程数
-                        .setDefaultIOReactorConfig(IOReactorConfig.custom()
-                                .setIoThreadCount(16)  // IO 线程数设置为 16，通常为 CPU 核心数的 2-4 倍
-                                .build())
-        );
-
         // 配置连接超时、套接字超时、获取连接超时
         restClientBuilder.setRequestConfigCallback(builder ->
-                builder
-                        .setConnectTimeout(20000)  // 连接超时：连接建立超时时间为 20 秒
-                        .setSocketTimeout(20000)   // 套接字超时：请求超时，通常是 20 秒
-                        .setConnectionRequestTimeout(20000) // 获取连接超时：20 秒
+                builder.setConnectTimeout(20000)
+                        .setSocketTimeout(20000)
+                        .setConnectionRequestTimeout(20000)
         );
-
-        // 配置失败监听器，自定义重试逻辑
-        restClientBuilder.setFailureListener(new RestClient.FailureListener() {
-            @Override
-            public void onFailure(Node node) {
-                // 可自定义错误处理逻辑，如重试或记录错误
-                System.out.println("Elasticsearch node failure detected: " + node);
-                super.onFailure(node);  // 默认的失败处理
-            }
-        });
-
         // 创建 RestClientTransport 和 ElasticsearchClient
         RestClient restClient = restClientBuilder.build();
         ElasticsearchTransport transport = new RestClientTransport(
@@ -96,7 +70,6 @@ public class ElasticsearchConfig {
                 new JacksonJsonpMapper() // 使用 Jackson 进行 JSON 处理
         );
 
-        // 返回 ElasticsearchClient 实例
         return new ElasticsearchClient(transport);
     }
 

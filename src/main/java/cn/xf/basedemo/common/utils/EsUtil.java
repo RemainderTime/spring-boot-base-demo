@@ -1,24 +1,22 @@
 package cn.xf.basedemo.common.utils;
 
-import cn.xf.basedemo.common.model.EsModel;
+import cn.xf.basedemo.common.model.EsBaseModel;
+import cn.xf.basedemo.common.model.EsSearchModel;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch._types.FieldValue;
-import co.elastic.clients.elasticsearch._types.OpType;
+import co.elastic.clients.elasticsearch._types.*;
 import co.elastic.clients.elasticsearch._types.query_dsl.*;
-import co.elastic.clients.elasticsearch.core.IndexRequest;
-import co.elastic.clients.elasticsearch.core.IndexResponse;
-import co.elastic.clients.elasticsearch.core.UpdateRequest;
-import co.elastic.clients.elasticsearch.core.UpdateResponse;
+import co.elastic.clients.elasticsearch.core.*;
+import co.elastic.clients.elasticsearch.core.search.*;
 import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
 import co.elastic.clients.json.JsonData;
 import co.elastic.clients.transport.endpoints.BooleanResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-
+import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,19 +27,22 @@ import java.util.stream.Collectors;
  * @date 2024/12/10
  * @description elasticsearch工具类
  */
-//@Component
 @Slf4j
+@Component
 public class EsUtil {
 
-//    @Autowired
-    private static ElasticsearchClient esClient;
+    public static ElasticsearchClient esClient;
+
+    {
+        esClient = (ElasticsearchClient) ApplicationContextUtils.getBean("elasticsearchClient");
+    }
 
     /**
      * 判断索引是否存在
      * @param indexName
      * @return
      */
-    private static boolean existIndex(String indexName) {
+    public static boolean existIndex(String indexName) {
         try {
             // 创建 ExistsRequest 请求
             ExistsRequest request = new ExistsRequest.Builder()
@@ -98,17 +99,22 @@ public class EsUtil {
 
     /**
      * 新增文档
-     * @param esModel
+     * @param esBaseModel
      * @return
      */
-    public static boolean addDocument(EsModel esModel) {
+    public static boolean addDocument(EsBaseModel esBaseModel) {
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            String jsonString = objectMapper.writeValueAsString(esBaseModel.getDocumentModel());
+            log.info("es新增文档，文档内容：{}", jsonString);
             // 创建 IndexRequest 实例
             IndexRequest request = new IndexRequest.Builder()
-                    .index(esModel.getIndexName())
-                    .id(esModel.getDocumentId()) //指定文档id,不指定会自动生成
-                    .document(esModel.getDocumentModel())
-                    .opType(OpType.Create).build(); // 只会在文档 ID 不存在时创建文档
+                    .index(esBaseModel.getIndexName())
+                    .id(esBaseModel.getDocumentId()) //指定文档id,不指定会自动生成
+                    .document(esBaseModel.getDocumentModel())
+                    .opType(OpType.Create) // 只会在文档 ID 不存在时创建文档
+                    .build();
+
             IndexResponse response = esClient.index(request);
             if ("created".equals(response.result())) {
                 log.info("Document created: " + response.id());
@@ -118,22 +124,24 @@ public class EsUtil {
                 return false;
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            log.error("es新增文档失败", e);
+            e.printStackTrace();
         }
+        return false;
     }
 
     /**
      * 更新文档
-     * @param esModel
+     * @param esBaseModel
      * @return
      */
-    public boolean updateDocument(EsModel esModel) {
+    public boolean updateDocument(EsBaseModel esBaseModel) {
         try {
             UpdateRequest updateRequest = new UpdateRequest.Builder<>()
-                    .index(esModel.getIndexName())
-                    .id(esModel.getDocumentId())
-                    .doc(esModel.getDocumentModel()).build();
-            UpdateResponse updateResponse = esClient.update(updateRequest, esModel.getClazz());
+                    .index(esBaseModel.getIndexName())
+                    .id(esBaseModel.getDocumentId())
+                    .doc(esBaseModel.getDocumentModel()).build();
+            UpdateResponse updateResponse = esClient.update(updateRequest, esBaseModel.getClazz());
             log.info("Document updated: " + updateResponse.id());
             return true;
         } catch (Exception e) {
@@ -144,20 +152,20 @@ public class EsUtil {
 
     /**
      * 更新文档指定字段（script 脚本）
-     * @param esModel
+     * @param esBaseModel
      * @param script 脚本内容
      * @param params 传递参数内容
      */
-    public void updateDocumentWithScript(EsModel esModel, String script, Map<String, JsonData> params) {
+    public void updateDocumentWithScript(EsBaseModel esBaseModel, String script, Map<String, JsonData> params) {
         try {
             UpdateRequest updateRequest = new UpdateRequest.Builder<>()
-                    .index(esModel.getIndexName())
-                    .id(esModel.getDocumentId())
+                    .index(esBaseModel.getIndexName())
+                    .id(esBaseModel.getDocumentId())
                     .script(s ->
                             s.source(script)// 脚本内容：.source("ctx._source.age += params.increment")
                                     .params(params)) // 传递参数内容：.params("increment",sonData.of(5))
                     .build();
-            UpdateResponse updateResponse = esClient.update(updateRequest, esModel.getClazz());
+            UpdateResponse updateResponse = esClient.update(updateRequest, esBaseModel.getClazz());
             log.info("Document updated: " + updateResponse.id());
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,50 +173,218 @@ public class EsUtil {
     }
 
     /**
-     * 构建查询条件
-     * @param queryMap
+     * 根据id查询文档
+     * @param esBaseModel
      * @return
      */
-    public Query createBoolQuery(Map<String, Object> queryMap) {
-        BoolQuery.Builder cQuery = new BoolQuery.Builder();
-        for (Map.Entry<String, Object> entry : queryMap.entrySet()) {
-            if (Objects.isNull(entry.getValue())) {
-                continue;
+    public static <T> T getDocumentById(EsBaseModel esBaseModel) {
+        try {
+            GetRequest getRequest = new GetRequest.Builder()
+                    .index(esBaseModel.getIndexName())
+                    .id(esBaseModel.getDocumentId())
+                    .build();
+            GetResponse<T> getResponse = esClient.get(getRequest, esBaseModel.getClazz());
+            if (getResponse.found()) {
+                return getResponse.source();
             }
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (value.getClass().isArray()) { //数组查询，使用 TermsQuery
-                Object[] values = (Object[]) entry.getValue();
-                List<FieldValue> objs = Arrays.stream(values)
-                        .map(v -> FieldValue.of(v))  // 将每个对象转换为 FieldValue
-                        .collect(Collectors.toList());
-                cQuery.must(new TermsQuery.Builder()
-                        .field(key)
-                        .terms(t -> t.value(objs))
+        } catch (Exception e) {
+            log.error("es列表查询失败", e);
+        }
+        return null;
+    }
+
+    /**
+     * 查询文档列表
+     * @param searchModel
+     * @return
+     */
+    public static <T> List<T> getDocumentList(EsSearchModel searchModel) {
+        List<T> eslist = new ArrayList<>();
+        try {
+            SearchResponse<T> search = esClient.search(buildSearchRequest(searchModel), searchModel.getClazz());
+            if (Objects.isNull(search)) {
+                return eslist;
+            }
+            HitsMetadata<T> hits = search.hits();
+            if (Objects.isNull(hits)) {
+                return eslist;
+            }
+            List<Hit<T>> sourceHitList = hits.hits();
+            if (CollectionUtils.isEmpty(sourceHitList)) {
+                return eslist;
+            }
+            sourceHitList.forEach(item -> {
+                // 处理每个命中
+                eslist.add(item.source());
+            });
+            return eslist;
+        } catch (Exception e) {
+            log.error("es列表查询失败", e);
+        }
+        return eslist;
+    }
+
+    /**
+     * 查询文档数量
+     * @param searchModel
+     * @return
+     */
+    public static long getDocumentCount(EsSearchModel searchModel) {
+        try {
+            CountRequest.Builder countRequest = new CountRequest.Builder();
+            countRequest.index(searchModel.getIndexName());
+            countRequest.query(createBoolQuery(searchModel.getTermQuery(), searchModel.getMatchQuery()));
+            CountResponse count = esClient.count(countRequest.build());
+            if (Objects.isNull(count)) {
+                log.info("es列表数量查询异常{}", searchModel);
+                return 0;
+            }
+            return count.count();
+        } catch (Exception e) {
+            log.error("es列表数量查询失败", e);
+        }
+        return 0;
+    }
+
+    /**
+     * 根据id删除文档
+     * @param esBaseModel
+     * @return
+     */
+    public static Boolean deleteDocumentById(EsBaseModel esBaseModel) {
+        try {
+            DeleteRequest deleteRequest = new DeleteRequest.Builder()
+                    .index(esBaseModel.getDocumentId())
+                    .id(esBaseModel.getDocumentId())
+                    .build();
+            DeleteResponse deleteResponse = esClient.delete(deleteRequest);
+            if ("deleted".equals(deleteResponse.result())) {
+                log.info("Document deleted: " + deleteResponse.id());
+                return true;
+            } else {
+                log.info("Document delete failed: " + deleteResponse.id());
+                return false;
+            }
+        } catch (Exception e) {
+            log.error("es列表删除失败", e);
+        }
+        return false;
+    }
+
+    /**
+     * 根据条件删除文档
+     * @param searchModel
+     * @return 删除数量
+     */
+    public static long deleteDocumentByQuery(EsSearchModel searchModel) {
+        try {
+            DeleteByQueryRequest.Builder deleteRequest = new DeleteByQueryRequest.Builder();
+            deleteRequest.index(searchModel.getIndexName());
+            deleteRequest.query(createBoolQuery(searchModel.getTermQuery(), searchModel.getMatchQuery()));
+            deleteRequest.refresh(true); //设置删除操作后是否立即刷新索引，使删除结果立即可见
+            deleteRequest.timeout(new Time.Builder().time("2s").build()); //设置删除操作的超时时间
+            deleteRequest.conflicts(Conflicts.Proceed); //Conflicts.Proceed：在版本冲突时继续删除操作;Conflicts.Abort：在版本冲突时中止删除操作
+            DeleteByQueryResponse dResponse = esClient.deleteByQuery(deleteRequest.build());
+            if (Objects.nonNull(dResponse)) {
+                log.info("es条件删除成功，删除数量：{}", dResponse.deleted());
+                return dResponse.deleted();
+            }
+        } catch (Exception e) {
+            log.error("es条件删除数据失败", e);
+        }
+        return 0;
+    }
+
+    /**
+     * 构建搜索请求对象
+     * @param searchModel
+     * @return
+     */
+    private static SearchRequest buildSearchRequest(EsSearchModel searchModel) {
+        //定义查询对象
+        SearchRequest.Builder searchRequest = new SearchRequest.Builder();
+        //设置索引名称
+        searchRequest.index(searchModel.getIndexName());
+        //分组去重
+        if (StringUtils.isNotBlank(searchModel.getRepeatField())) {
+            searchRequest.collapse(buildCollapse(searchModel));
+        }
+        //设置查询条件
+        searchRequest.query(createBoolQuery(searchModel.getTermQuery(), searchModel.getMatchQuery()));
+        //设置排序规则
+        if (searchModel.getSort() != null) {
+            searchRequest.sort(buildSort(searchModel.getSort()));
+        }
+        //设置分页参数
+        if (searchModel.getPageSize() != null && searchModel.getPageSize() != null) {
+            searchRequest.from(searchModel.getPageSize() * (searchModel.getPageNum() - 1));
+            searchRequest.size(searchModel.getPageSize());
+        }
+        //设置查询字段/排查字段
+        SourceConfig sourceConfig = buildSourceConfig(searchModel.getIncludes(), searchModel.getExcludes());
+        if (Objects.nonNull(sourceConfig)) {
+            searchRequest.source(sourceConfig);
+        }
+        return searchRequest.build();
+    }
+
+    /**
+     * 构建查询条件
+     * @param termQuery
+     * @param matchQuery
+     * @return
+     */
+    private static Query createBoolQuery(Map<String, Object> termQuery, Map<String, Object> matchQuery) {
+        BoolQuery.Builder cQuery = new BoolQuery.Builder();
+        // TermQuery 精准匹配
+        if (termQuery != null) {
+            for (Map.Entry<String, Object> entry : termQuery.entrySet()) {
+                if (Objects.isNull(entry.getValue())) {
+                    continue;
+                }
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value.getClass().isArray()) { //数组查询，使用 TermsQuery
+                    Object[] values = (Object[]) entry.getValue();
+                    List<FieldValue> objs = Arrays.stream(values)
+                            .map(v -> FieldValue.of(v))  // 将每个对象转换为 FieldValue
+                            .collect(Collectors.toList());
+                    cQuery.must(new TermsQuery.Builder()
+                            .field(key)
+                            .terms(t -> t.value(objs))
+                            .build()
+                            ._toQuery());
+                } else if (value.toString().contains(" ")) {  // 短语查询,使用 MatchPhraseQuery (要严格按照单词顺序字符串中有空格，短信需匹配)
+                    cQuery.must(new MatchPhraseQuery.Builder()
+                            .field(key)
+                            .query(value.toString())
+                            .build()
+                            ._toQuery());
+                } else { // 其他情况，使用 TermQuery 精准匹配
+                    cQuery.must(new TermQuery.Builder()
+                            .field(key)
+                            .value(value.toString())
+                            .build()
+                            ._toQuery());
+                }
+            }
+        }
+        // MatchQuery 模糊匹配全文检索分词查询
+        if (matchQuery != null) {
+            for (Map.Entry<String, Object> entry : matchQuery.entrySet()) {
+                if (Objects.isNull(entry.getValue())) {
+                    continue;
+                }
+                cQuery.must(new MatchQuery.Builder()
+                        .field(entry.getKey())
+                        .query(entry.getValue().toString())
                         .build()
                         ._toQuery());
-            } else if (value.toString().contains(" ")) {  // 短语查询,使用 MatchPhraseQuery (要严格按照单词顺序字符串中有空格，短信需匹配)
-                cQuery.must(new MatchPhraseQuery.Builder()
-                        .field(key)
-                        .query(value.toString())
-                        .build()
-                        ._toQuery());
-            } else { // 其他情况，使用 TermQuery 精准匹配
-                cQuery.must(new TermQuery.Builder()
-                        .field(key)
-                        .value(value.toString())
-                        .build()
-                        ._toQuery());
-                // 使用 MatchQuery 模糊匹配全文检索分词查询
-//                 cQuery.must(new MatchQuery.Builder()
-//                 .field(entry.getKey())
-//                 .query(value.toString())
-//                 .build()
-//                 ._toQuery());
             }
         }
         return cQuery.build()._toQuery();
     }
+
     /**
      * 构建时间区间查询
      * @param startTime 开始时间
@@ -216,7 +392,7 @@ public class EsUtil {
      * @param fieldName 时间字段
      * @return
      */
-    public Query createTimeQuery(String startTime, String endTime, String fieldName) {
+    public static Query createTimeQuery(String startTime, String endTime, String fieldName) {
         DateRangeQuery dataQuery = new DateRangeQuery.Builder()
                 .field(fieldName)
                 .build();
@@ -226,6 +402,67 @@ public class EsUtil {
         return dataQuery._toRangeQuery()._toQuery();
     }
 
+
+    /**
+     * 设置查询字段/排查字段
+     * @param includes 需要字段
+     * @param excludes 排除字段
+     * @return
+     */
+    private static SourceConfig buildSourceConfig(List<String> includes, List<String> excludes) {
+        boolean isIncludes = CollectionUtils.isEmpty(includes);
+        boolean isExcludes = CollectionUtils.isEmpty(excludes);
+        //设置查询字段/排查字段
+        if (isIncludes || isExcludes) {
+            SourceFilter.Builder sourceFilter = new SourceFilter.Builder();
+            if (isIncludes)
+                sourceFilter.includes(includes);
+            if (isExcludes)
+                sourceFilter.excludes(excludes);
+            return new SourceConfig.Builder().filter(sourceFilter.build()).build();
+        }
+        return null;
+    }
+
+
+    /**
+     * 构建分组去重
+     * @param searchModel
+     * @return
+     */
+    private static FieldCollapse buildCollapse(EsSearchModel searchModel) {
+        FieldCollapse.Builder fieldCollapse = new FieldCollapse.Builder();
+        //设置分组字段
+        fieldCollapse.field(searchModel.getRepeatField());
+        //设置嵌套配置
+        if (StringUtils.isNotBlank(searchModel.getInnerAlias())) {
+            InnerHits.Builder innerHits = new InnerHits.Builder();
+            //设置别名
+            innerHits.name(searchModel.getInnerAlias());
+            //设置查询数量
+            if (searchModel.getInnerSize() != null) {
+                innerHits.size(searchModel.getInnerSize());
+            }
+            fieldCollapse.innerHits(InnerHits.of(i -> i.name(searchModel.getInnerAlias()).size(10)));
+        }
+        return fieldCollapse.build();
+    }
+
+    /**
+     * 构建排序规则
+     * @param sortMap
+     * @return
+     */
+    private static List<SortOptions> buildSort(Map<String, String> sortMap) {
+        if (sortMap == null) {
+            return null;
+        }
+        List<SortOptions> sortList = new ArrayList<>();
+        for (Map.Entry<String, String> sort : sortMap.entrySet()) {
+            sortList.add(new SortOptions.Builder().field(f -> f.field(sort.getKey()).order(SortOrder.valueOf(sort.getValue()))).build());
+        }
+        return sortList;
+    }
 
     /**
      * 案例：组合多条件查询(关于 must、mustNot、should 条件的使用)

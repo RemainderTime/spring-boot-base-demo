@@ -6,14 +6,9 @@ import cn.xf.basedemo.interceptor.SessionContext;
 import cn.xf.basedemo.model.res.LoginInfoRes;
 import cn.xf.basedemo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @program: xf-boot-base
@@ -43,4 +38,17 @@ public class UserController {
         LoginUser loginUser = SessionContext.getInstance().get();
         return RetObj.success(loginUser);
     }
+
+    @Operation(summary = "es同步用户信息", description = "用户信息")
+    @GetMapping("/syncEs")
+    public RetObj syncEs(Long userId){
+        return userService.syncEs(userId);
+    }
+
+    @Operation(summary = "es查询用户信息", description = "用户信息")
+    @GetMapping("/getEsId")
+    public RetObj getEsId(Long userId){
+        return userService.getEsId(userId);
+    }
+
 }

@@ -52,6 +52,9 @@ mybatis-plus:
 
 # 参考文章  https://zhuanlan.zhihu.com/p/145359625
 management:
+  health:
+    elasticsearch: #禁用健康检查
+      enabled: false
   endpoints:
     web:
       exposure:
