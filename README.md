@@ -7,6 +7,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/RemainderTime/spring-boot-base-demo?style=social)](https://github.com/RemainderTime/spring-boot-base-demo)
 ![](https://img.shields.io/badge/jdk-1.8+-blue.svg)
 ![](https://img.shields.io/badge/springboot-3.3.3-{徽标颜色}.svg)
+
 ![](https://img.shields.io/badge/springdoc-2.6.0-{徽标颜色}.svg)
 ![](https://img.shields.io/badge/elasticsearch-8.16.0-005571.svg)
 ![](https://img.shields.io/badge/redis-3.3.3-FF4438.svg)
