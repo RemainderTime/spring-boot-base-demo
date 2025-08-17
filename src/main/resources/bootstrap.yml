@@ -5,9 +5,9 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 9.9.9.9:8848
+        server-addr: ${nacos.address}:8848
         file-extension: yml
         namespace: 34f368d5-a6c6-4f57-a80a-5402de295695
         group: DEFAULT_GROUP
         username: nacos
-        password:
+        password: ${nacos.password}
