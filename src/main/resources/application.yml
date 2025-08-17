@@ -18,6 +18,12 @@ spring:
       WRITE_DATES_AS_TIMESTAMPS: false
       FAIL_ON_EMPTY_BEANS: false
 
+elasticsearch:
+  host: localhost
+  port: 9200
+  username: elastic
+  password: kVgA7eeLyNQKh_IyV*mW  #window系统本地启动 es8.x 重置密码命令：.\elasticsearch-reset-password -u elastic
+
 springdoc:
   api-docs:
     path: /v3/api-docs # 自定义 API 文档路径
@@ -46,6 +52,9 @@ mybatis-plus:
 
 # 参考文章  https://zhuanlan.zhihu.com/p/145359625
 management:
+  health:
+    elasticsearch: #禁用健康检查
+      enabled: false
   endpoints:
     web:
       exposure:
@@ -55,6 +64,6 @@ management:
       show-details: always
 
 # 日志设置
-logging:
-  level:
-    root:
+#logging:
+#  level:
+#    root: DEBUG

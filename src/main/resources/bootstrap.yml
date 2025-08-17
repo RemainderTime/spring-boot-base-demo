@@ -9,10 +9,5 @@ spring:
         file-extension: yml
         namespace: 34f368d5-a6c6-4f57-a80a-5402de295695
         group: DEFAULT_GROUP
-        username:
-        password:
-      discovery:
-        server-addr: 9.9.9.9:9
-        namespace: 34f368d5-a6c6-4f57-a80a-5402de295695
-        username:
+        username: nacos
         password:
