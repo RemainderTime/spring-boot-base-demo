@@ -23,7 +23,7 @@ public class ApplicationContextUtils implements ApplicationContextAware {
         ApplicationContextUtils.context = applicationContext;
     }
 
-    public static ApplicationContext geteContext(){
+    public static ApplicationContext getContext(){
         return context;
     }
 
