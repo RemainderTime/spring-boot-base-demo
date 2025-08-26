@@ -1,5 +1,7 @@
 package cn.xf.basedemo.controller.business;
 
+import cn.dev33.satoken.annotation.SaCheckPermission;
+import cn.dev33.satoken.stp.StpUtil;
 import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.model.RetObj;
 import cn.xf.basedemo.interceptor.SessionContext;
@@ -34,6 +36,7 @@ public class UserController {
 
     @Operation(summary = "用户信息", description = "用户信息")
     @PostMapping("/info")
+    @SaCheckPermission("user:info")
     public RetObj info(){
         LoginUser loginUser = SessionContext.getInstance().get();
         return RetObj.success(loginUser);
@@ -49,6 +52,12 @@ public class UserController {
     @GetMapping("/getEsId")
     public RetObj getEsId(Long userId){
         return userService.getEsId(userId);
+    }
+
+    @Operation(summary = "获取用户权限数据", description = "用户信息")
+    @GetMapping("/getPermission")
+    public RetObj getPermission(){
+        return RetObj.success(StpUtil.getPermissionList());
     }
 
 }

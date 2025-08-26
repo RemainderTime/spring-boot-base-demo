@@ -2,6 +2,7 @@ package cn.xf.basedemo.mappers;
 
 import cn.xf.basedemo.model.domain.SysPermission;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
 * @createDate 2025-08-19 21:22:03
 * @Entity cn.xf.basedemo.model.domain.SysPermission
 */
+@Mapper
 public interface SysPermissionMapper extends BaseMapper<SysPermission> {
 
 	List<String> getPermissionListByRoleId(Long useId);

@@ -2,6 +2,7 @@ package cn.xf.basedemo.mappers;
 
 import cn.xf.basedemo.model.domain.SysRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
 * @createDate 2025-08-19 21:22:03
 * @Entity cn.xf.basedemo.model.domain.SysRole
 */
+@Mapper
 public interface SysRoleMapper extends BaseMapper<SysRole> {
 
 	List<String> getRoleListByUserId(Long userId);

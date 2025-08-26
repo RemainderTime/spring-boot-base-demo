@@ -4,8 +4,6 @@ import cn.dev33.satoken.stp.StpInterface;
 import cn.xf.basedemo.common.utils.ApplicationContextUtils;
 import cn.xf.basedemo.mappers.SysPermissionMapper;
 import cn.xf.basedemo.mappers.SysRoleMapper;
-import cn.xf.basedemo.model.domain.SysRole;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,13 +18,14 @@ import java.util.List;
 @Component
 public class StpInterfaceImpl implements StpInterface {
 
-	private SysPermissionMapper sysPermissionMapper= (SysPermissionMapper) ApplicationContextUtils.getBean("SysPermissionMapper");
-	private SysRoleMapper sysRoleMapper= (SysRoleMapper) ApplicationContextUtils.getBean("SysRoleMapper");
-
+	private SysPermissionMapper sysPermissionMapper =  ApplicationContextUtils.getBean(SysPermissionMapper.class);
+	private SysRoleMapper sysRoleMapper =  ApplicationContextUtils.getBean(SysRoleMapper.class);
 	@Override
 	public List<String> getPermissionList(Object userId, String s) {
 		//获取登录用户权限数据
-		return sysPermissionMapper.getPermissionListByRoleId((Long) userId);
+		Long aLong = Long.valueOf(userId.toString());
+		List<String> permissionList = sysPermissionMapper.getPermissionListByRoleId(aLong);
+		return permissionList;
 	}
 
 	@Override
