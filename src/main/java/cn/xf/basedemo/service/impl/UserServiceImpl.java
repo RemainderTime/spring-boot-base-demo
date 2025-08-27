@@ -1,6 +1,5 @@
 package cn.xf.basedemo.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import cn.xf.basedemo.common.model.EsBaseModel;
 import cn.xf.basedemo.common.model.LoginInfo;
 import cn.xf.basedemo.common.model.LoginUser;
@@ -91,8 +90,6 @@ public class UserServiceImpl implements UserService {
 
         redisTemplate.opsForValue().set("token:" + token, JSONObject.toJSONString(loginUser), 3600, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set("user_login_token:" + user.getId(), token, 3600, TimeUnit.SECONDS);
-        //登录成功 写入sa-token中
-        StpUtil.login(user.getId());
         return RetObj.success(loginUser);
     }
 
