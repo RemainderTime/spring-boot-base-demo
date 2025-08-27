@@ -31,6 +31,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     private RedisTemplate redisTemplate;
 
 
+
     //不拦截的请求列表
     private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("/user/login", "/web/login","/swagger-ui.html","/v3/api-docs","/swagger-ui/index.html");
 

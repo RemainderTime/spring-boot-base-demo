@@ -170,6 +170,12 @@
             <version>4.40.0.ALL</version>
         </dependency>
 
+        <!-- 引入 spring security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
