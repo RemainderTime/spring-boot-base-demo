@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * @Author: xiongfeng
  * @CreateTime: 2023-11-08  11:48
- * @Description: TODO 全局异常捕获类
+ * @Description: TODO 全局异常捕获类（仅 Controller 层异常）
  * @Version: 1.0
  */
 @Slf4j
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
      * @return
      */
     @ExceptionHandler(LoginException.class)
-    public GenericResponse tokenExceptionHandler(HttpServletRequest request, final Exception e, HttpServletResponse response) {
+    public GenericResponse tokenExceptionHandler(HttpServletRequest request, final LoginException e, HttpServletResponse response) {
         log.error("token exception", e);
         LoginException exception = (LoginException) e;
         response.setStatus(HttpStatus.FORBIDDEN.value());
@@ -95,6 +95,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
     public ResponseEntity exceptionHandler(jakarta.servlet.http.HttpServletRequest request, final Exception e, jakarta.servlet.http.HttpServletResponse response) {
         Map<String, String> errors = new HashMap<>();
         errors.put("message", e.getMessage());
+        log.error("error------{}", e);
         return ResponseEntity.status(SystemStatus.ERROR.getCode()).body(errors);
     }
 
