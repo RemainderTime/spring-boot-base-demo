@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -82,6 +83,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler{
             errors.put(error.getField(), error.getDefaultMessage());
         });
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * 访问权限不足异常捕获
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity handleAccessDenied(AccessDeniedException e) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", 403);
+        result.put("msg", "权限不足，请联系管理员");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(result);
     }
 
     /**

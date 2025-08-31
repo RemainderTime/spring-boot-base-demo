@@ -35,19 +35,12 @@ import java.util.stream.Collectors;
 /**
  * @program: spring-boot-base-demo
  * @ClassName TokenInterceptor
- * @description:
+ * @description: 拦截器职责（日志、请求校验、限流）
  * @author: xiongfeng
  * @create: 2022-06-16 14:17
  **/
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
-
-    @Autowired
-    private RedisTemplate redisTemplate;
-
-    private SysPermissionMapper sysPermissionMapper = ApplicationContextUtils.getBean(SysPermissionMapper.class);
-    private SysRoleMapper sysRoleMapper = ApplicationContextUtils.getBean(SysRoleMapper.class);
-
 
     //不拦截的请求列表
     private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("/user/login", "/web/login", "/swagger-ui.html", "/v3/api-docs", "/swagger-ui/index.html");
@@ -61,33 +54,8 @@ public class TokenInterceptor implements HandlerInterceptor {
                 requestURI.contains("/v3/api-docs")) {
             return true;
         }
-        //登录处理
-        String token = request.getHeader("Authorization");
-        if (StringUtils.isEmpty(token))
-            token = request.getParameter("token");
-        if (StringUtils.isEmpty(token)) {
-            throw new LoginException("请先登录");
-        }
-        String value = (String) redisTemplate.opsForValue().get("token:" + token);
-        if (StringUtils.isEmpty(value)) {
-            throw new LoginException();
-        }
-        JSONObject jsonObject = JSONObject.parseObject(value);
-        //JSON对象转换成Java对象
-        LoginUser loginUserInfo = JSONObject.toJavaObject(jsonObject, LoginUser.class);
-        if (loginUserInfo == null || loginUserInfo.getId() <= 0) {
-            throw new LoginException(ResponseCode.USER_INPUT_ERROR);
-        }
-        redisTemplate.expire(token, 86700, TimeUnit.SECONDS);
-        //设置用户权限角色
-        this.setSpringSecurityContext(loginUserInfo);
-        //用户信息设置到上下文(如果使用Spring security 也可设置登录用户上下文数据，下面就可不用自定义设置)
-        SessionContext.getInstance().set(loginUserInfo);
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
-//    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//    CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
-//    Long userId = user.getUserId(); // 拿到登录用户 ID
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
@@ -95,26 +63,5 @@ public class TokenInterceptor implements HandlerInterceptor {
         SessionContext.getInstance().clear();
     }
 
-    /**
-     * 设置用户权限角色 （Spring Security 本身的 SecurityContext 是请求级别的，每次请求都会被清理，所以每次请求都会查询权限数据并设置，
-     * 安全但是很慢，所以可以做一些优化，比如把权限数据放到redis中获取和用户信息一起放在jwt中，然后登录时解析在设置到Spring security上下文中）
-     * @param loginUserInfo
-     */
-    private void setSpringSecurityContext(LoginUser loginUserInfo) {
-        //获取登录用户权限数据
-        List<String> permissionList = sysPermissionMapper.getPermissionListByRoleId(loginUserInfo.getId());
-        //获取用户角色数据
-        List<String> roleList = sysRoleMapper.getRoleListByUserId(loginUserInfo.getId());
-        if (!CollectionUtils.isEmpty(roleList)) {
-            //为角色拼接前缀
-            roleList = roleList.stream().map(role -> "ROLE_" + role).collect(Collectors.toList());
-        }
-        permissionList.addAll(roleList);
-        //封装用户权限角色
-        List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(permissionList);
-        //设置用户信息到SpringSecurity上下文
-        UserDetails userDetails = new CustomUserDetails(loginUserInfo.getId(), loginUserInfo.getPhone(), authorities);
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
+
 }

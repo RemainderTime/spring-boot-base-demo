@@ -40,8 +40,10 @@ public class UserController {
     @PostMapping("/info")
     @PreAuthorize("hasAuthority('user:add')") // 权限控制
     public RetObj info(){
-        LoginUser loginUser = SessionContext.getInstance().get();
-        return RetObj.success(loginUser);
+//        LoginUser loginUser = SessionContext.getInstance().get();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+        return RetObj.success(user);
     }
 
     @Operation(summary = "es同步用户信息", description = "用户信息")
@@ -56,7 +58,6 @@ public class UserController {
     public RetObj getEsId(Long userId){
         return userService.getEsId(userId);
     }
-
     @Operation(summary = "获取用户权限数据", description = "用户信息")
     @GetMapping("/getPermission")
     public RetObj getPermission(){
@@ -64,5 +65,6 @@ public class UserController {
         CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
         return RetObj.success(user.getAuthorities());
     }
+
 
 }
