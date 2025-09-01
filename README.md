@@ -15,7 +15,9 @@
 
 #### 分支
 - master 快速上手开发spring boot 用户端单体应用
-- feature/admin-auth-sa-token 快速上手后台管理系统应用-基于master分支集成国产权限框架sa-token,实现RBAC模型（角色 → 用户 → 菜单 → 权限）基于角色的访问控制
+- feature/admin-auth-spring-security 基于master分支集成spring官方鉴权框架spring security框架，可用于后台管理系统后端项目，实现RBAC模型（角色 → 用户 → 菜单 → 权限）基于角色的访问控制
+- feature/admin-auth-sa-token 基于master分支集成国产权限框架sa-token，可用于后台管理系统后端项目，实现RBAC模型（角色 → 用户 → 菜单 → 权限）基于角色的访问控制
+
 
 ### 集成技术与功能亮点
 
