@@ -31,18 +31,18 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
 				response.setStatus(HttpStatus.FORBIDDEN.value());
 				LoginException le = (LoginException) ex;
 				writer.write(new ObjectMapper().writeValueAsString(
-						new GenericResponse(le.getCode(), null, le.getMessage())
+						new GenericResponse<>(le.getCode(), null, le.getMessage())
 				));
 			} else if (ex instanceof BusinessException) {
 				BusinessException be = (BusinessException) ex;
 				response.setStatus(HttpStatus.BAD_REQUEST.value());
 				writer.write(new ObjectMapper().writeValueAsString(
-						new GenericResponse(be.getCode(), null, be.getMessage())
+						new GenericResponse<>(be.getCode(), null, be.getMessage())
 				));
 			} else {
 				response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 				writer.write(new ObjectMapper().writeValueAsString(
-						new GenericResponse(500, null, "系统异常")
+						new GenericResponse<>(500, null, "系统异常")
 				));
 			}
 		} catch (IOException ioEx) {
