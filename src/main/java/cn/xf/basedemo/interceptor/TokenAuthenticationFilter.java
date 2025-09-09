@@ -89,7 +89,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.setContentType("application/json;charset=UTF-8");
 			response.getWriter().write("{\"message\":\"" + e.getMessage() + "\"}");
-		}
+		}finally {
+            // 无论请求是否异常，最后一定清理，避免 ThreadLocal 泄漏
+            SessionContext.getInstance().clear();
+        }
 	}
 	//    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //    CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
