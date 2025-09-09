@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public RetObj getEsId(Long userId) {
         Object user = EsUtil.getDocumentById(new EsBaseModel("user", String.valueOf(userId), null, User.class));
-        if(Objects.nonNull(user)){
+        if (Objects.nonNull(user)) {
             return RetObj.success(user);
         }
         return RetObj.error("es中不存在该用户");
