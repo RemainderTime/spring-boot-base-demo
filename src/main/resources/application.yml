@@ -1,4 +1,3 @@
-
 server:
   port: 8089
   shutdown: graceful
@@ -7,63 +6,21 @@ spring:
     active: dev
   application:
     name: xf-boot-base
-  servlet:
-    multipart:
-      max-file-size: 20MB
-      max-request-size: 20MB
-  jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
-    time-zone: GMT+8
-    serialization:
-      WRITE_DATES_AS_TIMESTAMPS: false
-      FAIL_ON_EMPTY_BEANS: false
+  cloud:
+    nacos:
+      config:
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PWD:nacos}
+        file-extension: yml
+        namespace: 34f368d5-a6c6-4f57-a80a-5402de295695
+        group: DEFAULT_GROUP
+      discovery:
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PWD:nacos}
+        namespace: 34f368d5-a6c6-4f57-a80a-5402de295695
+  config:
+    import:
+      - nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
 
-elasticsearch:
-  host: localhost
-  port: 9200
-  username: elastic
-  password: kVgA7eeLyNQKh_IyV*mW  #window系统本地启动 es8.x 重置密码命令：.\elasticsearch-reset-password -u elastic
-
-springdoc:
-  api-docs:
-    path: /v3/api-docs # 自定义 API 文档路径
-  swagger-ui:
-    path: /swagger-ui.html # 自定义 Swagger UI 路径
-    enabled: true
-  info:
-    title: 文撩 API 文档
-    description: 这是文撩平台的 API 文档
-    version: v1.0
-
-mybatis-plus:
-  configuration:
-    map-underscore-to-camel-case: false
-    auto-mapping-behavior: full
-    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启SQL语句打印
-  mapper-locations: classpath*:mapper/**/*Mapper.xml
-  global-config:
-    # 逻辑删除配置
-    db-config:
-      update-strategy: IGNORED
-      # 删除前
-      logic-not-delete-value: 1
-      # 删除后
-      logic-delete-value: 0
-
-# 参考文章  https://zhuanlan.zhihu.com/p/145359625
-management:
-  health:
-    elasticsearch: #禁用健康检查
-      enabled: false
-  endpoints:
-    web:
-      exposure:
-        include: "health"
-  endpoint:
-    health:
-      show-details: always
-
-# 日志设置
-#logging:
-#  level:
-#    root: DEBUG
