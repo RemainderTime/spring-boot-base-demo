@@ -27,28 +27,35 @@ public class UserController {
 
     @Operation(summary = "用户登录", description = "用户登录")
     @PostMapping("/login")
-    public RetObj login(@RequestBody LoginInfoRes res){
+    public RetObj login(@RequestBody LoginInfoRes res) {
 
         return userService.login(res);
     }
 
     @Operation(summary = "用户信息", description = "用户信息")
     @PostMapping("/info")
-    public RetObj info(){
+    public RetObj info() {
         LoginUser loginUser = SessionContext.getInstance().get();
         return RetObj.success(loginUser);
     }
 
     @Operation(summary = "es同步用户信息", description = "用户信息")
     @GetMapping("/syncEs")
-    public RetObj syncEs(Long userId){
+    public RetObj syncEs(Long userId) {
         return userService.syncEs(userId);
     }
 
     @Operation(summary = "es查询用户信息", description = "用户信息")
     @GetMapping("/getEsId")
-    public RetObj getEsId(Long userId){
+    public RetObj getEsId(Long userId) {
         return userService.getEsId(userId);
     }
 
+
+    //发送队列消息
+    @Operation(summary = "发送队列消息", description = "发送队列消息")
+    @GetMapping("/sendMsg")
+    public RetObj sendMsg(String msg) {
+        return userService.sendMQMsg(msg);
+    }
 }

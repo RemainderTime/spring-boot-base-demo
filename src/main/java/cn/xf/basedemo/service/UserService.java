@@ -17,4 +17,6 @@ public interface UserService {
     RetObj syncEs(Long userId);
 
     RetObj getEsId(Long userId);
+
+    RetObj sendMQMsg(String msg);
 }

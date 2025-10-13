@@ -12,16 +12,19 @@ import cn.xf.basedemo.config.GlobalConfig;
 import cn.xf.basedemo.mappers.UserMapper;
 import cn.xf.basedemo.model.domain.User;
 import cn.xf.basedemo.model.res.LoginInfoRes;
+import cn.xf.basedemo.mq.RocketMqMsgProducer;
 import cn.xf.basedemo.service.UserService;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -48,6 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RedisTemplate redisTemplate;
+
+    @Resource
+    private RocketMqMsgProducer rocketMqMsgProducer;
 
     @Override
     public RetObj login(LoginInfoRes res) {
@@ -115,5 +121,11 @@ public class UserServiceImpl implements UserService {
             return RetObj.success(user);
         }
         return RetObj.error("es中不存在该用户");
+    }
+
+    @Override
+    public RetObj sendMQMsg(String msg) {
+        rocketMqMsgProducer.sendMsg("user-topic", msg);
+        return RetObj.success();
     }
 }
