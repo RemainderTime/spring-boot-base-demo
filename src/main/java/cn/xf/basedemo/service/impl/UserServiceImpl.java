@@ -11,7 +11,7 @@ import cn.xf.basedemo.common.utils.StringUtil;
 import cn.xf.basedemo.config.GlobalConfig;
 import cn.xf.basedemo.mappers.UserMapper;
 import cn.xf.basedemo.model.domain.User;
-import cn.xf.basedemo.model.res.LoginInfoRes;
+import cn.xf.basedemo.model.req.LoginInfoReq;
 import cn.xf.basedemo.mq.RocketMqMsgProducer;
 import cn.xf.basedemo.service.UserService;
 import com.alibaba.fastjson.JSONObject;
@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -56,7 +55,7 @@ public class UserServiceImpl implements UserService {
     private RocketMqMsgProducer rocketMqMsgProducer;
 
     @Override
-    public RetObj login(LoginInfoRes res) {
+    public RetObj login(LoginInfoReq res) {
 
         if (Objects.isNull(res) || StringUtils.isEmpty(res.getEncryptedData())) {
             return null;

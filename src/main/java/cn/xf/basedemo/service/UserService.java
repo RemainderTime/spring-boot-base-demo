@@ -1,7 +1,7 @@
 package cn.xf.basedemo.service;
 
 import cn.xf.basedemo.common.model.RetObj;
-import cn.xf.basedemo.model.res.LoginInfoRes;
+import cn.xf.basedemo.model.req.LoginInfoReq;
 
 /**
  * @program: xf-boot-base
@@ -12,7 +12,7 @@ import cn.xf.basedemo.model.res.LoginInfoRes;
  **/
 public interface UserService {
 
-    RetObj login(LoginInfoRes res);
+    RetObj login(LoginInfoReq res);
 
     RetObj syncEs(Long userId);
 

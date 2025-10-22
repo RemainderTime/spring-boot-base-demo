@@ -32,7 +32,7 @@ public class TokenInterceptor implements HandlerInterceptor {
 
 
     //不拦截的请求列表
-    private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("/user/login", "/web/login","/swagger-ui.html","/v3/api-docs","/swagger-ui/index.html");
+    private static final List<String> EXCLUDE_PATH_LIST = Arrays.asList("/user/login", "/web/login", "/swagger-ui.html", "/v3/api-docs", "/swagger-ui/index.html");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -49,7 +49,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             token = request.getParameter("token");
         if (StringUtils.isEmpty(token)) {
             throw new LoginException("请先登录");
-        }else {
+        } else {
             //验证token
             if (!token.startsWith("Bearer ")) {
                 throw new LoginException(ResponseCode.USER_INPUT_ERROR);

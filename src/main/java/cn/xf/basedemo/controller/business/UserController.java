@@ -3,7 +3,7 @@ package cn.xf.basedemo.controller.business;
 import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.model.RetObj;
 import cn.xf.basedemo.interceptor.SessionContext;
-import cn.xf.basedemo.model.res.LoginInfoRes;
+import cn.xf.basedemo.model.req.LoginInfoReq;
 import cn.xf.basedemo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +27,7 @@ public class UserController {
 
     @Operation(summary = "用户登录", description = "用户登录")
     @PostMapping("/login")
-    public RetObj login(@RequestBody LoginInfoRes res) {
+    public RetObj login(@RequestBody LoginInfoReq res) {
 
         return userService.login(res);
     }

@@ -1,4 +1,4 @@
-package cn.xf.basedemo.model.res;
+package cn.xf.basedemo.model.req;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -11,7 +11,7 @@ import lombok.Data;
  * @create: 2022-07-04 11:46
  **/
 @Data
-public class LoginInfoRes {
+public class LoginInfoReq {
 
     /**
      * 登录密文
