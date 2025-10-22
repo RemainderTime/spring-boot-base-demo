@@ -6,10 +6,7 @@ import cn.xf.basedemo.model.req.PayOrderFrom;
 import cn.xf.basedemo.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * PayOrderController
