@@ -9,6 +9,8 @@ public interface OrderService {
 
     RetObj aliCreateOrder(PayOrderFrom from);
 
+    RetObj aliAppCreateOrder(PayOrderFrom from);
+
     String aliCallback(HttpServletRequest request);
 
     String queryAlipayOrderStatus(String orderNo);

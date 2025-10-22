@@ -7,8 +7,10 @@ import cn.xf.basedemo.model.res.PayOrderRes;
 import cn.xf.basedemo.service.OrderService;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayClient;
+import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.domain.AlipayTradeQueryModel;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradePagePayResponse;
@@ -64,6 +66,27 @@ public class OrderServiceImpl implements OrderService {
             return RetObj.success(res);
         } catch (Exception e) {
             log.error("创建订单失败", e);
+        }
+        return null;
+    }
+
+    @Override
+    public RetObj<PayOrderRes> aliAppCreateOrder(PayOrderFrom from) {
+        //校验
+        //...
+        String orderNo = "O" + System.currentTimeMillis();
+        AlipayTradeAppPayRequest request = getAlipayTradeAppPayRequest(from, orderNo);
+        try {
+            String body = alipayClient.sdkExecute(request).getBody();
+            PayOrderRes res = new PayOrderRes();
+            res.setOrderNo(orderNo);
+            //返回给前端调起本机支付宝APP支付
+            res.setFrom(body);
+            //创建订单
+            //...
+            return RetObj.success(res);
+        }catch (Exception e){
+            log.error("APP创建订单失败", e);
         }
         return null;
     }
@@ -148,6 +171,21 @@ public class OrderServiceImpl implements OrderService {
         bizContent.put("subject", from.getProductName());
         bizContent.put("product_code", "FAST_INSTANT_TRADE_PAY");
         request.setBizContent(bizContent.toJSONString());
+        return request;
+    }
+
+    @NotNull
+    private AlipayTradeAppPayRequest getAlipayTradeAppPayRequest(PayOrderFrom from, String orderNo) {
+        AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
+        request.setNotifyUrl(aliPayConfigProperties.getNotifyUrl());
+        request.setReturnUrl(aliPayConfigProperties.getReturnUrl());
+        AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
+        model.setOutTradeNo(orderNo);
+        model.setTotalAmount(from.getPrice().multiply(new BigDecimal(from.getNum())).toString());
+        model.setSubject(from.getProductName());
+        model.setProductCode("APP_INSTANT_TRADE_PAY");
+        model.setBody(from.getProductName());
+        request.setBizModel(model);
         return request;
     }
 }

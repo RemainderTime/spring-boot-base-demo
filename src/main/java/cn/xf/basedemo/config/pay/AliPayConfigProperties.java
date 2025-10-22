@@ -42,6 +42,16 @@ public class AliPayConfigProperties {
      */
     private String gatewayUrl;
 
+    /**
+     * 异步回调地址
+     */
+    private String notifyUrl;
+
+    /**
+     * 支付成功跳转地址
+     */
+    private String returnUrl;
+
     // 签名方式
     private String sign_type = "RSA2";
     // 字符编码格式

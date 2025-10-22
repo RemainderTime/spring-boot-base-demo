@@ -26,11 +26,18 @@ public class PayOrderController {
     @Resource
     private OrderService orderService;
 
-    @Operation(summary = "支付宝支付下单", description = "支付宝支付下单")
+    @Operation(summary = "支付宝PC/H5支付下单", description = "支付宝PC/H5支付下单")
     @PostMapping("/ali/createOrder")
     public RetObj aliCreateOrder(@RequestBody PayOrderFrom from) {
 
         return orderService.aliCreateOrder(from);
+    }
+
+    @Operation(summary = "支付宝app支付下单", description = "支付宝app支付下单")
+    @PostMapping("/ali/app/createOrder")
+    public RetObj aliAppCreateOrder(@RequestBody PayOrderFrom from) {
+
+        return orderService.aliAppCreateOrder(from);
     }
 
     //掉单查询支付宝支付订单状态
