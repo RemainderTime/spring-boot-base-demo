@@ -3,6 +3,7 @@ package cn.xf.basedemo.mq;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RocketMqMsgProducer {
 
-    @Resource
+    @Autowired(required = false) // 当没有 RocketMQTemplate 时也不会报错
     private RocketMQTemplate rocketMQTemplate;
 
     //发送普通消息

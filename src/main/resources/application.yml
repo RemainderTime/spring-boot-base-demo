@@ -23,4 +23,5 @@ spring:
   config:
     import:
       - nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+      - nacos:ai-common.yaml
 
