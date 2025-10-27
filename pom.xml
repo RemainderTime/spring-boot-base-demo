@@ -33,18 +33,27 @@
     </properties>
 
     <repositories>
+        <!-- 设置maven里程碑仓库地址 ai依赖还未正式发布到maven正式仓库中 -->
         <!-- Spring Milestone -->
-        <repository>
-            <id>spring-milestones</id>
-            <name>Spring Milestone Repository</name>
-            <url>https://repo.spring.io/milestone</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
+<!--        <repository>-->
+<!--            <id>spring-milestones</id>-->
+<!--            <name>Spring Milestone Repository</name>-->
+<!--            <url>https://repo.spring.io/milestone</url>-->
+<!--            <releases>-->
+<!--                <enabled>false</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+<!--        <repository>-->
+<!--            <id>spring-snapshots</id>-->
+<!--            <name>Spring Snapshots</name>-->
+<!--            <url>https://repo.spring.io/snapshot</url>-->
+<!--            <releases>-->
+<!--                <enabled>false</enabled>-->
+<!--            </releases>-->
+<!--        </repository>-->
 
         <!-- Maven Central -->
         <repository>
@@ -117,6 +126,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
@@ -192,16 +206,19 @@
             <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
             <version>0.8.1</version>
         </dependency>
+        <!-- 用于ai rag 解析上传的数据文件-->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-tika-document-reader</artifactId>
             <version>0.8.1</version>
         </dependency>
+        <!-- 用于ai rag 存储数据向量数据库-->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-pgvector-store</artifactId>
             <version>0.8.1</version>
         </dependency>
+        <!-- 用于ai rag 存储数据向量数据库-->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-pgvector-store-spring-boot-starter</artifactId>
@@ -216,6 +233,12 @@
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-ollama</artifactId>
             <version>0.8.1</version>
+        </dependency>
+        <!-- 引入 JGit 操作库到工程中，用于执行 Git 命令拉取代码仓库-->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.13.0.202109080827-r</version>
         </dependency>
 
     </dependencies>

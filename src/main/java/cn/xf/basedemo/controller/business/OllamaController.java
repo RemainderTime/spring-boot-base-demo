@@ -35,9 +35,9 @@ public class OllamaController {
 
     @Resource
     private OllamaChatClient chatClient;
-//
-//    @Resource
-//    private PgVectorStore pgVectorStore;
+
+    @Resource
+    private PgVectorStore pgVectorStore;
 
     /**
      * http://localhost:8090/api/v1/ollama/generate?model=deepseek-r1:1.5b&message=1+1
@@ -77,34 +77,34 @@ public class OllamaController {
      * @param message
      * @return
      */
-//    @RequestMapping(value = "generate_stream_rag", method = RequestMethod.GET)
-//    public Flux<ChatResponse> generateStreamRag(@RequestParam("model") String model, @RequestParam("ragTag") String ragTag, @RequestParam("message") String message) {
-//        String SYSTEM_PROMPT = """
-//                Use the information from the DOCUMENTS section to provide accurate answers but act as if you knew this information innately.
-//                If unsure, simply state that you don't know.
-//                Another thing you need to note is that your reply must be in Chinese!
-//                DOCUMENTS:
-//                    {documents}
-//                """;
-//
-//        // 指定文档搜索
-//        SearchRequest request = SearchRequest.query(message)
-//                .withTopK(5)
-//                .withFilterExpression("knowledge == '" + ragTag + "'");
-//
-//        List<Document> documents = pgVectorStore.similaritySearch(request);
-//        String documentCollectors = documents.stream().map(Document::getContent).collect(Collectors.joining());
-//        Message ragMessage = new SystemPromptTemplate(SYSTEM_PROMPT).createMessage(Map.of("documents", documentCollectors));
-//
-//        List<Message> messages = new ArrayList<>();
-//        messages.add(new UserMessage(message));
-//        messages.add(ragMessage);
-//
-//        return chatClient.stream(new Prompt(
-//                messages,
-//                OllamaOptions.create()
-//                        .withModel(model)
-//        ));
-//    }
+    @RequestMapping(value = "generate_stream_rag", method = RequestMethod.GET)
+    public Flux<ChatResponse> generateStreamRag(@RequestParam("model") String model, @RequestParam("ragTag") String ragTag, @RequestParam("message") String message) {
+        String SYSTEM_PROMPT = """
+                Use the information from the DOCUMENTS section to provide accurate answers but act as if you knew this information innately.
+                If unsure, simply state that you don't know.
+                Another thing you need to note is that your reply must be in Chinese!
+                DOCUMENTS:
+                    {documents}
+                """;
+
+        // 指定文档搜索
+        SearchRequest request = SearchRequest.query(message)
+                .withTopK(5)
+                .withFilterExpression("knowledge == '" + ragTag + "'");
+
+        List<Document> documents = pgVectorStore.similaritySearch(request);
+        String documentCollectors = documents.stream().map(Document::getContent).collect(Collectors.joining());
+        Message ragMessage = new SystemPromptTemplate(SYSTEM_PROMPT).createMessage(Map.of("documents", documentCollectors));
+
+        List<Message> messages = new ArrayList<>();
+        messages.add(new UserMessage(message));
+        messages.add(ragMessage);
+
+        return chatClient.stream(new Prompt(
+                messages,
+                OllamaOptions.create()
+                        .withModel(model)
+        ));
+    }
 
 }
