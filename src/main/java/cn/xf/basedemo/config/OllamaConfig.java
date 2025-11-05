@@ -1,21 +1,17 @@
 package cn.xf.basedemo.config;
 
-
-import org.springframework.ai.ollama.OllamaEmbeddingClient;
+import org.springframework.ai.ollama.OllamaEmbeddingModel;
 import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.ai.ollama.api.OllamaOptions;
-import org.springframework.ai.openai.OpenAiEmbeddingClient;
-import org.springframework.ai.openai.api.OpenAiApi;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
-import org.springframework.ai.vectorstore.PgVectorStore;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
-import org.springframework.ai.ollama.OllamaChatClient;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.ai.vectorstore.pgvector.PgVectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-
+import org.springframework.web.client.RestClient;
+import org.springframework.web.reactive.function.client.WebClient;
 /**
  * OllamaConfig
  *
@@ -28,51 +24,69 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class OllamaConfig {
 
     @Bean
-    public OllamaApi ollamaApi(@Value("${spring.ai.ollama.base-url}") String baseUrl) {
-        return new OllamaApi(baseUrl);
+    public OllamaApi ollamaApi(@Value("${spring.ai.ollama.base-url}") String baseUrl, RestClient.Builder restClientBuilder, WebClient.Builder webClientBuilder) {
+        return OllamaApi.builder()
+                .baseUrl(baseUrl)   // 或从配置读取
+                .restClientBuilder(restClientBuilder)
+                .webClientBuilder(webClientBuilder)
+                .build();
     }
 
-    @Bean
-    public OpenAiApi openAiApi(@Value("${spring.ai.openai.base-url}") String baseUrl, @Value("${spring.ai.openai.api-key}") String apikey) {
-        return new OpenAiApi(baseUrl, apikey);
-    }
 
-    @Bean
-    public OllamaChatClient ollamaChatClient(OllamaApi ollamaApi) {
-        return new OllamaChatClient(ollamaApi);
-    }
-
+    /**
+     * 注入文本分割器
+     * @return
+     */
     @Bean
     public TokenTextSplitter tokenTextSplitter() {
-        return new TokenTextSplitter();
+        return new TokenTextSplitter(500, 100, 50, 1000, true);
     }
 
-    @Bean
-    public SimpleVectorStore vectorStore(@Value("${spring.ai.rag.embed}") String model, OllamaApi ollamaApi, OpenAiApi openAiApi) {
-        if ("nomic-embed-text".equalsIgnoreCase(model)) {
-            OllamaEmbeddingClient embeddingClient = new OllamaEmbeddingClient(ollamaApi);
-            embeddingClient.withDefaultOptions(OllamaOptions.create().withModel("nomic-embed-text"));
-            return new SimpleVectorStore(embeddingClient);
-        }
-        else {
-            OpenAiEmbeddingClient embeddingClient = new OpenAiEmbeddingClient(openAiApi);
-            return new SimpleVectorStore(embeddingClient);
-        }
+    /**
+     * 使用 Ollama API 将文本等对象转换成向量
+     * 存储在 内存中 或者简单实现
+     * 小数据量、临时存储
+     * @param ollamaApi
+     * @return
+     */
+    @Bean("ollamaSimpleVectorStore")
+    public SimpleVectorStore vectorStore(OllamaApi ollamaApi) {
+        OllamaEmbeddingModel embeddingModel = OllamaEmbeddingModel
+                .builder()
+                .ollamaApi(ollamaApi)
+                .defaultOptions(OllamaOptions.builder().model("nomic-embed-text").build())
+                .build();
+        return SimpleVectorStore.builder(embeddingModel).build();
     }
 
-    @Bean
-    public PgVectorStore pgVectorStore(@Value("${spring.ai.rag.embed}") String model, OllamaApi ollamaApi,OpenAiApi openAiApi,@Qualifier("pgvectorJdbcTemplate") JdbcTemplate jdbcTemplate) {
-        if ("nomic-embed-text".equalsIgnoreCase(model)) {
-            OllamaEmbeddingClient embeddingClient = new OllamaEmbeddingClient(ollamaApi);
-            embeddingClient.withDefaultOptions(OllamaOptions.create().withModel("nomic-embed-text"));
-            return new PgVectorStore(jdbcTemplate, embeddingClient);
-        }
-        else {
-            OpenAiEmbeddingClient embeddingClient = new OpenAiEmbeddingClient(openAiApi);
-            return new PgVectorStore(jdbcTemplate, embeddingClient);
-        }
+    /**
+     * 使用 Ollama API 生成向量
+     * 存储在 PostgreSQL 中持久化
+     * 支持向量搜索、分页等数据库操作
+     * @param ollamaApi
+     * @param jdbcTemplate
+     * @return
+     */
+    @Bean("ollamaPgVectorStore")
+    public PgVectorStore pgVectorStore(OllamaApi ollamaApi, JdbcTemplate jdbcTemplate) {
+        OllamaEmbeddingModel embeddingModel = OllamaEmbeddingModel
+                .builder()
+                .ollamaApi(ollamaApi)
+                .defaultOptions(OllamaOptions.builder().model("nomic-embed-text").build())
+                .build();
+        return PgVectorStore.builder(jdbcTemplate, embeddingModel)
+                .vectorTableName("vector_store_ollama_deepseek")
+                .build();
     }
-
+    //每种模式独立一张向量表
+    /**
+     create table public.vector_store_ollama_deepseek (
+     id UUID primary key default gen_random_uuid(),
+     content TEXT not null,
+     metadata JSONB,
+     embedding VECTOR(768)
+     )
+     */
 
 }
 

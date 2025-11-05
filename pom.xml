@@ -28,65 +28,22 @@
         <elasticsearch.version>8.16.0</elasticsearch.version>
         <sverlet.version>4.0.1</sverlet.version>
         <rocketmq.version>2.3.4</rocketmq.version>
-        <spring-ai.version>0.8.1</spring-ai.version>
-
+        <spring-ai.version>1.0.3</spring-ai.version>
     </properties>
-
-    <repositories>
-        <!-- 设置maven里程碑仓库地址 ai依赖还未正式发布到maven正式仓库中 -->
-        <!-- Spring Milestone -->
-<!--        <repository>-->
-<!--            <id>spring-milestones</id>-->
-<!--            <name>Spring Milestone Repository</name>-->
-<!--            <url>https://repo.spring.io/milestone</url>-->
-<!--            <releases>-->
-<!--                <enabled>false</enabled>-->
-<!--            </releases>-->
-<!--            <snapshots>-->
-<!--                <enabled>true</enabled>-->
-<!--            </snapshots>-->
-<!--        </repository>-->
-<!--        <repository>-->
-<!--            <id>spring-snapshots</id>-->
-<!--            <name>Spring Snapshots</name>-->
-<!--            <url>https://repo.spring.io/snapshot</url>-->
-<!--            <releases>-->
-<!--                <enabled>false</enabled>-->
-<!--            </releases>-->
-<!--        </repository>-->
-
-        <!-- Maven Central -->
-        <repository>
-            <id>central</id>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-        <repository>
-            <id>spring-releases</id>
-            <url>https://repo.spring.io/release</url>
-        </repository>
-        <repository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
-        <repository>
-            <id>spring-snapshot</id>
-            <url>https://repo.spring.io/snapshot</url>
-        </repository>
-    </repositories>
     <!-- 执行更新命令  $env:JAVA_HOME="D:\Config\jdk17"; $env:PATH="$env:JAVA_HOME\bin;$env:PATH"; mvn clean install -U -->
 
-<!--    <dependencyManagement>-->
-<!--        <dependencies>-->
-<!--            &lt;!&ndash;spring-ai 统一版本&ndash;&gt;-->
-<!--            <dependency>-->
-<!--                <groupId>org.springframework.ai</groupId>-->
-<!--                <artifactId>spring-ai-bom</artifactId>-->
-<!--                <version>${spring-ai.version}</version>-->
-<!--                <type>pom</type>-->
-<!--                <scope>import</scope>-->
-<!--            </dependency>-->
-<!--        </dependencies>-->
-<!--    </dependencyManagement>-->
+    <dependencyManagement>
+        <dependencies>
+            <!--spring-ai 统一版本-->
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -201,38 +158,30 @@
         </dependency>
 
         <!-- spring-ai 语言模型 依赖 -->
+        <!-- 集成openAi依赖  openai官方只支持云端调用服务，不支持本地ollama安装-->
         <dependency>
             <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-openai-spring-boot-starter</artifactId>
-            <version>0.8.1</version>
+            <artifactId>spring-ai-openai</artifactId>
         </dependency>
         <!-- 用于ai rag 解析上传的数据文件-->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-tika-document-reader</artifactId>
-            <version>0.8.1</version>
         </dependency>
         <!-- 用于ai rag 存储数据向量数据库-->
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-pgvector-store</artifactId>
-            <version>0.8.1</version>
         </dependency>
-        <!-- 用于ai rag 存储数据向量数据库-->
+        <!-- 集成ollama依赖-->
         <dependency>
             <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-pgvector-store-spring-boot-starter</artifactId>
-            <version>0.8.1</version>
+            <artifactId>spring-ai-ollama</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-core</artifactId>
-            <version>0.8.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-ollama</artifactId>
-            <version>0.8.1</version>
+            <version>1.0.0-M6</version>
         </dependency>
         <!-- 引入 JGit 操作库到工程中，用于执行 Git 命令拉取代码仓库-->
         <dependency>
@@ -241,6 +190,24 @@
             <version>5.13.0.202109080827-r</version>
         </dependency>
 
+        <!-- spring boot集成依赖目前还是里程碑阶段，不建议生产环境使用 -->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.ai</groupId>-->
+        <!--            <artifactId>spring-ai-openai-spring-boot-starter</artifactId>-->
+        <!--            <version>1.0.0-M6</version>-->
+        <!--        </dependency>-->
+        <!-- 用于ai rag 存储数据向量数据库 自动装配还是里程碑版本-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.ai</groupId>-->
+        <!--            <artifactId>spring-ai-pgvector-store-spring-boot-starter</artifactId>-->
+        <!--            <version>1.0.0-M6</version>-->
+        <!--        </dependency>-->
+        <!-- 引入 spring-ai-ollama-spring-boot-starter 启动器 里程碑版本 -->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.ai</groupId>-->
+        <!--            <artifactId>spring-ai-ollama-spring-boot-starter</artifactId>-->
+        <!--            <version>1.0.0-M6</version>-->
+        <!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -275,22 +242,22 @@
         </plugins>
     </build>
 
-<!--    <pluginRepositories>-->
-<!--        <pluginRepository>-->
-<!--            <id>spring-milestones</id>-->
-<!--            <name>Spring Milestone Plugin Repository</name>-->
-<!--            <url>https://repo.spring.io/milestone</url>-->
-<!--        </pluginRepository>-->
-<!--        <pluginRepository>-->
-<!--            <id>spring-snapshots</id>-->
-<!--            <name>Spring Snapshot Plugin Repository</name>-->
-<!--            <url>https://repo.spring.io/snapshot</url>-->
-<!--            <releases>-->
-<!--                <enabled>false</enabled>-->
-<!--            </releases>-->
-<!--            <snapshots>-->
-<!--                <enabled>true</enabled>-->
-<!--            </snapshots>-->
-<!--        </pluginRepository>-->
-<!--    </pluginRepositories>-->
+    <!--    <pluginRepositories>-->
+    <!--        <pluginRepository>-->
+    <!--            <id>spring-milestones</id>-->
+    <!--            <name>Spring Milestone Plugin Repository</name>-->
+    <!--            <url>https://repo.spring.io/milestone</url>-->
+    <!--        </pluginRepository>-->
+    <!--        <pluginRepository>-->
+    <!--            <id>spring-snapshots</id>-->
+    <!--            <name>Spring Snapshot Plugin Repository</name>-->
+    <!--            <url>https://repo.spring.io/snapshot</url>-->
+    <!--            <releases>-->
+    <!--                <enabled>false</enabled>-->
+    <!--            </releases>-->
+    <!--            <snapshots>-->
+    <!--                <enabled>true</enabled>-->
+    <!--            </snapshots>-->
+    <!--        </pluginRepository>-->
+    <!--    </pluginRepositories>-->
 </project>
