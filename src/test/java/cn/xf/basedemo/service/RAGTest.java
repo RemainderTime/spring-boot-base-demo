@@ -51,9 +51,7 @@ public class RAGTest {
     @Value("classpath:data/dog.png")
     private org.springframework.core.io.Resource imageResource;
 
-    @Resource
-    private SimpleVectorStore simpleVectorStore;
-    @Resource
+    @Resource(name = "ollamaPgVectorStore")
     private PgVectorStore pgVectorStore;
     @Resource
     private TextSplitter textSplitter;
@@ -63,7 +61,7 @@ public class RAGTest {
      */
     @Test
     public void upload() {
-        TikaDocumentReader reader = new TikaDocumentReader("./data/file.txt");
+        TikaDocumentReader reader = new TikaDocumentReader("./data/test.md");
         List<Document> documents = reader.get();
         // 2️⃣ 添加 metadata 标签
         for (Document doc : documents) {

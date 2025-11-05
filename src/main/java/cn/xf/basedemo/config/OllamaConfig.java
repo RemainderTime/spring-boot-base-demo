@@ -6,12 +6,9 @@ import org.springframework.ai.ollama.api.OllamaOptions;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.pgvector.PgVectorStore;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.reactive.function.client.WebClient;
 /**
  * OllamaConfig
  *
@@ -22,15 +19,6 @@ import org.springframework.web.reactive.function.client.WebClient;
  */
 @Configuration
 public class OllamaConfig {
-
-    @Bean
-    public OllamaApi ollamaApi(@Value("${spring.ai.ollama.base-url}") String baseUrl, RestClient.Builder restClientBuilder, WebClient.Builder webClientBuilder) {
-        return OllamaApi.builder()
-                .baseUrl(baseUrl)   // 或从配置读取
-                .restClientBuilder(restClientBuilder)
-                .webClientBuilder(webClientBuilder)
-                .build();
-    }
 
 
     /**

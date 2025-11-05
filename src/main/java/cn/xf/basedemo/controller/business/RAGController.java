@@ -37,7 +37,7 @@ public class RAGController {
 
     @Resource
     private TokenTextSplitter tokenTextSplitter;
-    @Resource
+    @Resource(name = "ollamaPgVectorStore")
     private PgVectorStore pgVectorStore;
     @Resource
     private RedisTemplate<String, String> redisTemplate;

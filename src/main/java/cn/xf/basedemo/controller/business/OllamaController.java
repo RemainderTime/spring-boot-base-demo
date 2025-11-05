@@ -36,7 +36,7 @@ public class OllamaController {
     @Resource
     private OllamaChatModel ollamaChatModel;
 
-    @Resource
+    @Resource(name = "ollamaPgVectorStore")
     private PgVectorStore pgVectorStore;
 
     /**
