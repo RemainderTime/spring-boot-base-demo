@@ -18,5 +18,4 @@ public interface UserService {
 
     RetObj getEsId(Long userId);
 
-    RetObj sendMQMsg(String msg);
 }

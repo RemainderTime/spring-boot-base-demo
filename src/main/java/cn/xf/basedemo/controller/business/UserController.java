@@ -51,11 +51,4 @@ public class UserController {
         return userService.getEsId(userId);
     }
 
-
-    //发送队列消息
-    @Operation(summary = "发送队列消息", description = "发送队列消息")
-    @GetMapping("/sendMsg")
-    public RetObj sendMsg(String msg) {
-        return userService.sendMQMsg(msg);
-    }
 }

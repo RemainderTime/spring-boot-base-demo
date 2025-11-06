@@ -52,9 +52,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    @Resource
-    private RocketMqMsgProducer rocketMqMsgProducer;
-
     @Override
     public RetObj login(LoginInfoRes res) {
 
@@ -121,11 +118,5 @@ public class UserServiceImpl implements UserService {
             return RetObj.success(user);
         }
         return RetObj.error("es中不存在该用户");
-    }
-
-    @Override
-    public RetObj sendMQMsg(String msg) {
-        rocketMqMsgProducer.sendMsg("user-topic", msg);
-        return RetObj.success();
     }
 }
