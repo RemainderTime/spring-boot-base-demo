@@ -150,12 +150,6 @@
             <artifactId>elasticsearch-java</artifactId>
             <version>${elasticsearch.version}</version>
         </dependency>
-        <!-- rocketMQ 消息队列 -->
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-spring-boot-starter</artifactId>
-            <version>${rocketmq.version}</version>
-        </dependency>
 
         <!-- spring-ai 语言模型 依赖 -->
         <!-- 集成openAi依赖  openai官方只支持云端调用服务，不支持本地ollama安装-->
