@@ -14,8 +14,4 @@ public interface UserService {
 
     RetObj login(LoginInfoRes res);
 
-    RetObj syncEs(Long userId);
-
-    RetObj getEsId(Long userId);
-
 }

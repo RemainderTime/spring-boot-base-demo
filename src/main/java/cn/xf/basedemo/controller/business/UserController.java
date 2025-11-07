@@ -39,16 +39,4 @@ public class UserController {
         return RetObj.success(loginUser);
     }
 
-    @Operation(summary = "es同步用户信息", description = "用户信息")
-    @GetMapping("/syncEs")
-    public RetObj syncEs(Long userId) {
-        return userService.syncEs(userId);
-    }
-
-    @Operation(summary = "es查询用户信息", description = "用户信息")
-    @GetMapping("/getEsId")
-    public RetObj getEsId(Long userId) {
-        return userService.getEsId(userId);
-    }
-
 }
