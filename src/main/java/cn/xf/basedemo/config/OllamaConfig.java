@@ -22,13 +22,23 @@ public class OllamaConfig {
 
 
     /**
-     * 注入文本分割器
+     * 注入文本分割器-重点注意配置参数
      * @return
      */
     @Bean
     public TokenTextSplitter tokenTextSplitter() {
-        return new TokenTextSplitter(500, 100, 50, 1000, true);
+        //短文本配置
+        return new TokenTextSplitter(256, 5, 10, 500, true);
     }
+    /**
+     TextSplitter splitter = new TokenTextSplitter(
+     500,    // chunkSize: 每块最多 500 tokens
+     100,    // minChunkSizeChars: 至少 100 个字符才分块
+     50,     // minChunkLengthToEmbed: 小于 50 个字符不进行 embedding
+     1000,   // maxNumChunks: 最多 1000 块
+     true    // keepSeparator: 保留句号、换行符
+     );
+     */
 
     /**
      * 使用 Ollama API 将文本等对象转换成向量

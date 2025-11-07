@@ -13,6 +13,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.content.Media;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.api.OllamaOptions;
 import org.springframework.ai.reader.tika.TikaDocumentReader;
@@ -21,6 +22,7 @@ import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.pgvector.PgVectorStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -55,6 +57,8 @@ public class RAGTest {
     private PgVectorStore pgVectorStore;
     @Resource
     private TextSplitter textSplitter;
+    @Autowired
+    private EmbeddingModel embeddingModel;
 
     /**
      * 上传文件到向量数据库中
@@ -68,14 +72,8 @@ public class RAGTest {
             doc.getMetadata().put("knowledge", "ai知识库");
             doc.getMetadata().put("timestamp", LocalDateTime.now().toString());
         }
-//        TextSplitter splitter = new TokenTextSplitter(
-//                500,   // chunkSize: 每块最多 500 tokens
-//                100,   // minChunkSizeChars: 至少 100 个字符才分块
-//                50,    // minChunkLengthToEmbed: 小于 50 个字符不进行 embedding
-//                1000,  // maxNumChunks: 最多 1000 块
-//                true   // keepSeparator: 保留句号、换行符
-//        );
         List<Document> splitDocs = textSplitter.split(documents);
+        log.info("分割后文档数: {}", splitDocs.size());
         pgVectorStore.accept(splitDocs);
         log.info("上传完成");
     }
@@ -117,7 +115,7 @@ public class RAGTest {
                 """;
 
         SearchRequest request = SearchRequest.builder()
-                .query("小米10年后多少岁")
+                .query(message)
                 .topK(5)
                 .filterExpression("knowledge == 'ai知识库'")
                 .build();
