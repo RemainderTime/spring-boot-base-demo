@@ -38,18 +38,9 @@ public class OpenAIConfig {
     }
 
     /**
-     * -- 删除旧的表（如果存在）
-     * DROP TABLE IF EXISTS public.vector_store_openai;
      *
-     * -- 创建新的表，使用UUID作为主键
-     * CREATE TABLE public.vector_store_openai (
-     *     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-     *     content TEXT NOT NULL,
-     *     metadata JSONB,
-     *     embedding VECTOR(1536)
-     * );
      *
-     * SELECT * FROM vector_store_openai
+     *
      */
     @Bean("openAiPgVectorStore")
     public PgVectorStore pgVectorStore(OpenAiApi openAiApi, JdbcTemplate jdbcTemplate) {
@@ -59,5 +50,17 @@ public class OpenAIConfig {
                 .vectorTableName("vector_store_openai")
                 .build();
     }
+    /**
+     *
+     -- 删除旧的表（如果存在）
+     DROP TABLE IF EXISTS public.vector_store_openai;
+     创建新的表，使用UUID作为主键
+     create table public.vector_store_openai (
+     id UUID primary key default gen_random_uuid(),
+     content TEXT not null,
+     metadata JSONB,
+     embedding VECTOR(1536)
+     )
+     */
 
 }
