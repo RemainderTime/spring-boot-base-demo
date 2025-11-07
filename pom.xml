@@ -25,7 +25,6 @@
         <logstash.version>5.3</logstash.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
-        <elasticsearch.version>8.16.0</elasticsearch.version>
         <sverlet.version>4.0.1</sverlet.version>
     </properties>
     <dependencies>
@@ -121,12 +120,6 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>${sverlet.version}</version> <!-- 根据需要选择合适的版本 -->
             <scope>provided</scope> <!-- 在Web服务器环境中由服务器提供 -->
-        </dependency>
-        <!-- elasticsearch8.x 搜索引擎 -->
-        <dependency>
-            <groupId>co.elastic.clients</groupId>
-            <artifactId>elasticsearch-java</artifactId>
-            <version>${elasticsearch.version}</version>
         </dependency>
     </dependencies>
 
