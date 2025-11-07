@@ -85,6 +85,14 @@ public class RAGController {
         return RetObj.success();
     }
 
+    /**
+     * 上传仓库中的代码项目
+     *
+     * @param repoUrl
+     * @param userName
+     * @param token
+     * @return
+     */
     @RequestMapping(value = "analyze_git_repository", method = RequestMethod.POST)
     public RetObj<String> analyzeGitRepository(@RequestParam String repoUrl, @RequestParam String userName, @RequestParam String token) throws Exception {
         String localPath = "./git-cloned-repo";
