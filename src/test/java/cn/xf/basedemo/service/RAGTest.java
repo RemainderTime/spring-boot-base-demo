@@ -59,7 +59,7 @@ public class RAGTest {
     private PgVectorStore pgVectorStore;
     @Resource
     private TextSplitter textSplitter;
-    @Autowired
+    @Resource
     private OpenAiChatModel openAiChatModel;
 
     /**
