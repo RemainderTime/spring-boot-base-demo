@@ -16,6 +16,8 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.api.OllamaOptions;
+import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.transformer.splitter.TextSplitter;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
@@ -58,7 +60,7 @@ public class RAGTest {
     @Resource
     private TextSplitter textSplitter;
     @Autowired
-    private EmbeddingModel embeddingModel;
+    private OpenAiChatModel openAiChatModel;
 
     /**
      * 上传文件到向量数据库中
@@ -136,6 +138,12 @@ public class RAGTest {
                         .model("deepseek-r1:1.5b")
                         .build()));
         log.info("测试结果:{}", JSON.toJSONString(chatResponse));
+    }
+
+    @Test
+    public void test_call_openai() {
+        openAiChatModel.stream(new Prompt("你好", OllamaOptions.builder()
+                .build()));
     }
 
 
