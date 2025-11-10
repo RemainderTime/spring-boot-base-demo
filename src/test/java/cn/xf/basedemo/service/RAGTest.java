@@ -17,6 +17,7 @@ import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.ai.ollama.api.OllamaOptions;
 import org.springframework.ai.openai.OpenAiChatModel;
+import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.OpenAiEmbeddingModel;
 import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.transformer.splitter.TextSplitter;
@@ -142,8 +143,15 @@ public class RAGTest {
 
     @Test
     public void test_call_openai() {
-        openAiChatModel.stream(new Prompt("你好", OllamaOptions.builder()
-                .build()));
+        ChatResponse call = openAiChatModel.call(
+                new Prompt(
+                        "Generate the names of 5 famous pirates.",
+                        OpenAiChatOptions.builder()
+                                .model("gpt-4o")
+                                .temperature(0.7)
+                                .build()
+                ));
+        log.info("测试结果:{}", JSON.toJSONString(call));
     }
 
 

@@ -148,7 +148,7 @@
         <!-- 集成openAi依赖  openai官方只支持云端调用服务，不支持本地ollama安装-->
         <dependency>
             <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-openai</artifactId>
+            <artifactId>spring-ai-starter-model-openai</artifactId>
         </dependency>
         <!-- 用于ai rag 解析上传的数据文件-->
         <dependency>

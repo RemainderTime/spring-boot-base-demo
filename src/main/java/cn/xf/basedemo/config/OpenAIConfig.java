@@ -22,13 +22,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class OpenAIConfig {
 
 
-    @Bean
-    public OpenAiApi openAiApi(@Value("${spring.ai.openai.base-url}") String baseUrl, @Value("${spring.ai.openai.api-key}") String apikey) {
-        return OpenAiApi.builder()
-                .baseUrl(baseUrl)
-                .apiKey(apikey)
-                .build();
-    }
+//    @Bean
+//    public OpenAiApi openAiApi(@Value("${spring.ai.openai.base-url}") String baseUrl, @Value("${spring.ai.openai.api-key}") String apikey) {
+//        return OpenAiApi.builder()
+//                .baseUrl(baseUrl)
+//                .apiKey(apikey)
+//                .build();
+//    }
 
     @Bean("openAiSimpleVectorStore")
     public SimpleVectorStore vectorStore(OpenAiApi openAiApi) {
