@@ -1,113 +1,108 @@
 spring:
+  servlet:
+  multipart:
+    max-file-size: 20MB
+    max-request-size: 20MB
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+      FAIL_ON_EMPTY_BEANS: false
   datasource:
     dynamic:
       primary: master
-      strict: true #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候回抛出异常,不启动会使用默认数据源.
+      strict: false #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候回抛出异常,不启动会使用默认数据源.
       hikari:
-        minimum-idle: 4
         maximum-pool-size: 4
+        minimum-idle: 4
+        leak-detection-threshold: 0
         connection-init-sql: SELECT 1
         connection-test-query: SELECT 1
       datasource:
         master: #${SERVER_ADDRESS}
-          url: jdbc:mysql://9.9.9.9:3307/xf-boot-base?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://localhost:3307/xf-boot-base?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
           username:
           password:
           driver-class-name: com.mysql.cj.jdbc.Driver
         slave:
-          url: jdbc:mysql://9.9.9.9:3307/xf-boot-base?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
+          url: jdbc:mysql://localhost:3307/xf-boot-base?useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Shanghai
           username:
           password:
           driver-class-name: com.mysql.cj.jdbc.Driver
+
   data:
     redis:
-      port: 6379 #Redis服务器连接的端口
-      host: 9.9.9.9 # Redis服务器的地址
-      password:  # Redis服务器连接密码（默认为空）
-      timeout: 5000 # 连接超时时间（毫秒）
+      port: 6379
+      host: localhost
+      password:
+      timeout: 5000
       lettuce:   #参考博客 https://blog.csdn.net/weixin_43944305/article/details/124322595
         pool:
-          maxActive: 5000					#最大连接数
-          maxIdle: 30						#连接池最大空闲连接数.
-          minIdle: 5						#连接池最小空闲连接数.
-          max-wait: 2000					#从连接池中获取连接时的最大等待时间
-          time-between-eviction-runs: 60s	#空闲对象逐出器线程的运行间隔时间.空闲连接线程释放周期时间.
+          maxActive: 5000
+          maxIdle: 30
+          minIdle: 5
+          max-wait: 2000
+          time-between-eviction-runs: 60s
         cluster:
           refresh:
-            adaptive: true        #拓扑动态感应即客户端能够根据 redis cluster 集群的变化，动态改变客户端的节点情况，完成故障转移。
-            period: 60s            #刷新redis集群状态周期时间
+            adaptive: true
+            period: 60s
 
 global:
   rsaPublicKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC_F5UQC1QWsu3QsESQBz9M-GDA9Atm0qVSvwIsy568lyRLi-nq3VvvnmgrlL4yTbngFzyfb2Dn35cNCHsBvIaGuCY3_PpzPqMzVpxr2QlEkhEX9atnJQ1rWexS8QeZtPjpiIwoQrChTzXjD_sYUkDrqSykFplyivf0NSO2WqCBdwIDAQAB
   rsaPrivateKey: MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAL8XlRALVBay7dCwRJAHP0z4YMD0C2bSpVK_AizLnryXJEuL6erdW--eaCuUvjJNueAXPJ9vYOfflw0IewG8hoa4Jjf8-nM-ozNWnGvZCUSSERf1q2clDWtZ7FLxB5m0-OmIjChCsKFPNeMP-xhSQOupLKQWmXKK9_Q1I7ZaoIF3AgMBAAECgYBxTUA61Ry0oL7U_86HP2TO9G4ZuhmQi9EucMaPXOPvmgYRLRIzCbDbMKc_P-BN3zwYnG57cgSZNz9OoPqeGvP_oVTnkoEpVkCSV-JP2p_DK09LdbDqszJXMrxAkPmWGUw8IRMcTJT1xJJcgzFE6T0CmTo-Vk47AnmqfJD4U6o74QJBAPRjVUJKZnrMSnSqKPDL2ThgTo8h7-KFxl_Z-g724lTOFiCmBpi6nCWAcuacFRrrYqxF-r9c4zdIyR7AvLROql8CQQDIK_kRF52dVtwShciZhyeUBLoi0nWV9F8mMGt60NTEER9zPEgPsv2aVn8h97KMWOwmd2Da4EPm25QxOuaKQC_pAkBczcfXp5co9KElkmR_pHl1jiTm97U3qSM-zPDHc_tYxvXiKgoBP4QCPbfkWMsu8MoEr4Jb3vMt0EcHlZtTQTgzAkAfmNla-lhV4sUgY1_T5EK6GbjsED6hag6u74u3ukkrnexR-10ApWdkumydBwV3I_464DM4uZfeVCDjWIHVpuYpAkEA6QLPztGD4V8Q1PqTEeSF3i68CKPM8vO1_mCH2JD7qsqDQcIKkczj5rTg7hlOKwB9V6gSw4CbnOF6moTooRD-cQ
 
-redis:
-  datasource:
-    token:
-      database: 1
-      host: 122.112.153.128
-      port: 6379
-      password: 'redis'
-      lettuce:
-        pool:
-          max-active: 8
-          max-wait: -1ms
-          max-idle: 8
-          min-idle: 0
-      timeout: 3000ms
+elasticsearch:
+  host: localhost
+  port: 9200
+  username: elastic
+  password:    #window系统本地启动 es8.x 重置密码命令：.\elasticsearch-reset-password -u elastic
 
-oss:
-  name: alioss
-  endpoint: ll-oss-pre.lianlianlvyou.com
-  accessKey:
-  secretKey:
-  bucketName:
-  args:
-    expireTime: 3600 #过期时间
-    contentLengthRange: 2000 #大小限制
-# redis分布式锁
-redisson:
-  enabled: true
-  address: 'redis://192.168.10.113:6379'
-  password: '123456'
-  database: 5
-  connectionPoolSize: 4
-  connectionMinimumIdleSize: 4
+rocketmq:
+  enabled: false
+  name-server: localhost
+  producer:
+    group: producer-group
+  consumer:
+    group: consumer-group
+    enable-orderly: false
 
-# 阿里云rocketmq
-aliyun:
-  rocketmq:
-    config:
-      AccessKey: 1
-      SecretKey: 1
-      NAMESRV_ADDR: 1
-      GROUP_ID: 1
-    producer:
-      enabled: true
+springdoc:
+  api-docs:
+    path: /v3/api-docs # 自定义 API 文档路径
+  swagger-ui:
+    path: /swagger-ui.html # 自定义 Swagger UI 路径
+    enabled: true
+  info:
+    title: 文撩 API 文档
+    description: 这是文撩平台的 API 文档
+    version: v1.0
 
-rabbitmq:
-  configs:
-    order: #实例名称
-      host: 192.168.10.111
-      port: 5672
-      virtualHost: ll-dev
-      username: zhangziheng
-      password: zhangziheng
-      producer:
-        enabled: true
-        exchange: order_status
-        routingKey: ORDER_COMPLETE
-        confirmCallback: orderMqConfirmCallback
-    commonChange:
-      host: 192.168.10.111
-      port: 5672
-      virtualHost: ll-dev
-      username: zhangziheng
-      password: zhangziheng
-      producer:
-        enabled: false
-      consumer:
-        enabled: true
-        subscribeList:
-          - queue: 'app-business'
-            messageListener: commonChangeMessageListener
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    auto-mapping-behavior: full
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启SQL语句打印
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  global-config:
+    # 逻辑删除配置
+    db-config:
+      update-strategy: IGNORED
+      # 删除前
+      logic-not-delete-value: 1
+      # 删除后
+      logic-delete-value: 0
+
+# 参考文章  https://zhuanlan.zhihu.com/p/145359625
+management:
+  health:
+    elasticsearch: #禁用健康检查
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+  endpoint:
+    health:
+      show-details: always
