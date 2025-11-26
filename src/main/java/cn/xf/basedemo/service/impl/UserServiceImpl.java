@@ -1,24 +1,19 @@
 package cn.xf.basedemo.service.impl;
 
-import cn.xf.basedemo.common.model.EsBaseModel;
 import cn.xf.basedemo.common.model.LoginInfo;
 import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.model.RetObj;
-import cn.xf.basedemo.common.utils.EsUtil;
 import cn.xf.basedemo.common.utils.JwtTokenUtils;
 import cn.xf.basedemo.common.utils.RSAUtils;
-import cn.xf.basedemo.common.utils.StringUtil;
 import cn.xf.basedemo.config.GlobalConfig;
 import cn.xf.basedemo.mappers.UserMapper;
 import cn.xf.basedemo.model.domain.User;
-import cn.xf.basedemo.model.req.LoginInfoReq;
-import cn.xf.basedemo.mq.RocketMqMsgProducer;
+import cn.xf.basedemo.model.res.LoginInfoRes;
 import cn.xf.basedemo.service.UserService;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -50,9 +45,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private RedisTemplate redisTemplate;
-
-    @Resource
-    private RocketMqMsgProducer rocketMqMsgProducer;
 
     @Override
     public RetObj login(LoginInfoReq res) {
@@ -99,32 +91,4 @@ public class UserServiceImpl implements UserService {
         return RetObj.success(loginUser);
     }
 
-    @Override
-    public RetObj syncEs(Long userId) {
-        User user = userMapper.selectById(userId);
-        if (Objects.isNull(user)) {
-            return RetObj.error("用户不存在");
-        }
-        String index = StringUtil.camelToKebabCase(user.getClass().getSimpleName());
-        if (!EsUtil.existIndex(index)) {
-            EsUtil.createIndex(index);
-        }
-        EsUtil.addDocument(new EsBaseModel(index, String.valueOf(user.getId()), user, user.getClass()));
-        return RetObj.success();
-    }
-
-    @Override
-    public RetObj getEsId(Long userId) {
-        Object user = EsUtil.getDocumentById(new EsBaseModel("user", String.valueOf(userId), null, User.class));
-        if (Objects.nonNull(user)) {
-            return RetObj.success(user);
-        }
-        return RetObj.error("es中不存在该用户");
-    }
-
-    @Override
-    public RetObj sendMQMsg(String msg) {
-        rocketMqMsgProducer.sendMsg("user-topic", msg);
-        return RetObj.success();
-    }
 }

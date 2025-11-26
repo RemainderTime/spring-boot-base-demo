@@ -14,9 +14,4 @@ public interface UserService {
 
     RetObj login(LoginInfoReq res);
 
-    RetObj syncEs(Long userId);
-
-    RetObj getEsId(Long userId);
-
-    RetObj sendMQMsg(String msg);
 }

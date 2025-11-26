@@ -25,9 +25,7 @@
         <logstash.version>5.3</logstash.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
-        <elasticsearch.version>8.16.0</elasticsearch.version>
         <sverlet.version>4.0.1</sverlet.version>
-        <rocketmq.version>2.3.4</rocketmq.version>
         <alipay.sdk.version>4.40.476.ALL</alipay.sdk.version>
     </properties>
     <dependencies>
@@ -124,19 +122,6 @@
             <version>${sverlet.version}</version> <!-- 根据需要选择合适的版本 -->
             <scope>provided</scope> <!-- 在Web服务器环境中由服务器提供 -->
         </dependency>
-        <!-- elasticsearch8.x 搜索引擎 -->
-        <dependency>
-            <groupId>co.elastic.clients</groupId>
-            <artifactId>elasticsearch-java</artifactId>
-            <version>${elasticsearch.version}</version>
-        </dependency>
-        <!-- rocketMQ 消息队列 -->
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-spring-boot-starter</artifactId>
-            <version>${rocketmq.version}</version>
-        </dependency>
-
         <!-- 支付宝 -->
         <dependency>
             <groupId>com.alipay.sdk</groupId>

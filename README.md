@@ -17,6 +17,8 @@
 - master 快速上手开发spring boot 用户端单体应用
 - feature/admin-auth-spring-security 基于master分支集成spring官方鉴权框架spring security框架，可用于后台管理系统后端项目，实现RBAC模型（角色 → 用户 → 菜单 → 权限）基于角色的访问控制
 - feature/admin-auth-sa-token 基于master分支集成国产权限框架sa-token，可用于后台管理系统后端项目，实现RBAC模型（角色 → 用户 → 菜单 → 权限）基于角色的访问控制
+- component/rocketmq-and-es 基于master分支集成消息队列原生RocketMQ5.x与原生Elasticsearch 8.x，提供消息队列与搜索引擎服务，实现消息持久化与全文检索
+- feature/master-payment 基于master分支集成支付宝沙盒功能（H5支付、APP支付）
 
 
 ### 集成技术与功能亮点
