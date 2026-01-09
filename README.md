@@ -1,67 +1,136 @@
-## 拿来即用springboot基础脚手架
+# XF-Boot-Base (Spring Boot Base Demo)
+
+<div align="center">
+
+<img src="https://img.shields.io/badge/Spring_Boot-3.3.3-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white" alt="Spring Boot"/>
+<img src="https://img.shields.io/badge/Java-17%2B-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java"/>
+<img src="https://img.shields.io/badge/Nacos-2.x-00C7D5?style=for-the-badge&logo=AlibabaCloud&logoColor=white" alt="Nacos"/>
+<img src="https://img.shields.io/badge/MyBatis_Plus-3.5.8-00599C?style=for-the-badge&logo=Spring&logoColor=white" alt="MyBatis Plus"/>
+
+<br/>
+<br/>
+
+[![GitHub stars](https://img.shields.io/github/stars/RemainderTime/spring-boot-base-demo?style=social&label=Stars)](https://github.com/RemainderTime/spring-boot-base-demo)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](./LICENSE)
 
 ---
-### 项目介绍
 
-[![](https://img.shields.io/badge/-@remaindertime-FC5531?style=flat&logo=csdn&logoColor=FC5531&labelColor=424242)](https://blog.csdn.net/qq_39818325?type=blog)
-[![GitHub Stars](https://img.shields.io/github/stars/RemainderTime/spring-boot-base-demo?style=social)](https://github.com/RemainderTime/spring-boot-base-demo)
-![](https://img.shields.io/badge/jdk-1.8+-blue.svg)
-![](https://img.shields.io/badge/springboot-3.3.3-{徽标颜色}.svg)   
-![](https://img.shields.io/badge/springdoc-2.6.0-{徽标颜色}.svg)
-![](https://img.shields.io/badge/elasticsearch-8.16.0-005571.svg)
-![](https://img.shields.io/badge/redis-3.3.3-FF4438.svg)
----
-> 这是一个基于 **Spring Boot 3.3.3** 的快速构建单体架构脚手架，旨在帮助开发者快速搭建高效、稳定的项目基础框架。项目集成了多种常用的技术组件与功能，涵盖从用户认证到数据加密、从全局异常处理到搜索引擎操作，适合个人学习与企业级单体应用开发。
+### 「 为企业级开发而生的高效脚手架 」
 
-#### 分支
-- master 快速上手开发spring boot 用户端单体应用
-- feature/admin-auth-spring-security 基于master分支集成spring官方鉴权框架spring security框架，可用于后台管理系统后端项目，实现RBAC模型（角色 → 用户 → 菜单 → 权限）基于角色的访问控制
-- feature/admin-auth-sa-token 基于master分支集成国产权限框架sa-token，可用于后台管理系统后端项目，实现RBAC模型（角色 → 用户 → 菜单 → 权限）基于角色的访问控制
-- component/rocketmq-and-es 基于master分支集成消息队列原生RocketMQ5.x与原生Elasticsearch 8.x，提供消息队列与搜索引擎服务，实现消息持久化与全文检索
-- feature/master-payment 基于master分支集成支付宝沙盒功能（H5支付、APP支付）
+<p align="center">
+  <a href="#-关于项目">💎 关于项目</a> &nbsp;|&nbsp;
+  <a href="#-核心亮点">⚡ 核心亮点</a> &nbsp;|&nbsp;
+  <a href="#-生态全景">🌿 生态全景</a> &nbsp;|&nbsp;
+  <a href="#-快速运行">🚀 快速运行</a> &nbsp;|&nbsp;
+  <a href="#-项目日志">📅 项目日志</a>
+</p>
 
+</div>
 
-### 集成技术与功能亮点
+<br/>
 
-- 身份认证与授权（JWT）：基于 JWT 实现用户认证与授权，确保系统安全性。
-- 数据加密（RSA）：提供 RSA 非对称加密支持，保障敏感数据安全。
-- 持久层框架（MyBatis Plus）：简化数据库操作，提供高效的 CRUD 支持。
-- 数据库（MySQL）：采用 MySQL 作为默认数据库，易于扩展和维护。
-- 数据连接池（Hikari）：高性能数据源管理，优化数据库连接效率。
-- 缓存（Redis）：支持分布式缓存，提升系统响应速度与并发能力。
-- 接口文档（springdoc-openapi）：自动生成标准化 API 文档，便于调试与集成。
-- 模板引擎（Thymeleaf）：支持动态页面渲染，提升前后端协同效率。
-- 容器化支持（Docker）：内置 Dockerfile，轻松实现环境部署与迁移。
-- 搜索引擎（Elasticsearch 8.x）：集成最新版本 Elasticsearch Java 客户端，提供高效的全文检索与复杂查询功能。
-- 全局异常处理：统一管理异常，提升代码可维护性与调试效率。
-- 拦截器支持：轻松实现请求拦截与权限控制。
+## � 关于项目
 
-### 项目优势
-**全面适配 Spring Boot 3.x**
-- 所有组件已全面升级为支持 Spring Boot 3.x 的最新版本。解决了开发者在版本升级中遇到的各种不兼容和适配问题，大大减少了升级带来的额外工作量，让项目开发更加顺畅。
+**XF-Boot-Base** 并非仅仅是一个简单的 "Hello World" 示例，而是一个经过精心打磨、具备生产级标准的 **Spring Boot 3.3** 全栈开发底座。
 
-**初学者友好**
-- 提供清晰的代码结构与详细的配置说明，帮助初学者快速上手微服务与单体架构的开发实践。
+我们深入分析了企业单体应用到微服务架构演进过程中的痛点，构建了一套**模块化、可插拔、高扩展**的基础框架。从底层的 **JDK 17** 优化，到顶层的 API 接口规范；从**JWT 安全认证**的丝滑接入，到 **Docker 容器化**的一键部署。XF-Boot-Base 旨在消除重复造轮子的时间成本，让开发者能够专注于核心业务逻辑的实现。
 
-**高扩展性**
-- 丰富的功能集成，涵盖了开发中常见的场景，减少重复开发工作量，同时为定制化需求预留了扩展空间。
-
-**稀缺的最新技术操作示例**
-- 最新版本的 Elasticsearch 8.x 集成、Java 客户端操作示例和现代化 API 设计，让开发者能够轻松掌握分布式搜索引擎的使用。
-
-### 版本更新 2024-10-12
+无论你是想要快速验证想法的独立开发者，还是寻找稳健基石的架构师，这里都有你需要的最佳实践。
 
 ---
-1. springboot版本升级3.x
-2. mybatis plus版本升级3.x
-3. dynamic mybatis plus版本升级3.x
-4. redis版本升级3.x以及配置优化
-5. 替换swagger依赖支持spring boot3.x (knife4j->springdoc-openapi)
-6. 新增请求头工具类
-7. 参数校验异常捕获优化
-8. 登录拦截器注册为spring容器管理 
-9. 新增本地日志配置文件
+
+## ⚡ 核心亮点
+
+<div align="center">
+
+| 🚀 **前沿技术** | 🔐 **安全无忧** | 🐳 **云原生友好** |
+| :--- | :--- | :--- |
+| 紧跟 **Spring Boot 3.x** 生态，<br>基于 **Java 17 LTS** 构建，<br>享受最新技术红利。 | 深度整合 **JWT** 令牌认证<br>& **RSA** 非对称加密，<br>为数据安全保驾护航。 | 内置 **Dockerfile** 脚本，<br>支持 **Docker Compose** 编排，<br>部署快人一步。 |
+
+| 💾 **数据增强** | 🔌 **微服务预装** | 🛠 **极致体验** |
+| :--- | :--- | :--- |
+| **MyBatis Plus** 强力驱动，<br>**Dynamic Datasource**<br>轻松驾驭多数据源场景。 | 原生集成 **Nacos**，<br>配置中心与注册中心开箱即用，<br>平滑过渡微服务。 | **SpringDoc (OpenAPI 3)**<br>自动生成精美文档，<br>调试开发得心应手。 |
+
+</div>
 
 ---
-如果这个项目对你有帮助，请随手点个 Star ⭐ 支持一下吧！🎉✨ 你的支持是我持续优化的动力！❤️
+
+## 🌿 生态全景
+
+我们采用 **"核心 + 插件化"** 的分支管理策略，以 `master` 为稳定基石，通过不同分支满足多样化的业务需求。
+
+| 🌳 分支标识 | 🎯 定位 | 📝 功能描述 | 🏭 最佳应用场景 |
+| :--- | :--- | :--- | :--- |
+| **`master`** | **核心底座** | 标准化脚手架，含 JWT/Nacos/Redis | 🚀 快速启动标准单体项目 |
+| `feature/admin-auth-spring-security` | **安全堡垒** | Spring Security 官方方案 (RBAC) | 🏦 金融级、政府级后台系统 |
+| `feature/admin-auth-sa-token` | **敏捷权限** | Sa-Token 轻量级权限控制 | ⚡ 中小型项目、国内快速开发 |
+| `component/rocketmq-and-es` | **高并发** | RocketMQ 5.x + Elasticsearch 8.x | 📈 海量日志、搜索、高吞吐业务 |
+| `feature/master-payment` | **商业变现** | 支付宝沙盒支付 (H5/App) | 💳 电商、会员订阅、SaaS 平台 |
+
+> **💡 提示**: 所有分支均基于 `master` 演进，可根据项目规模灵活 `git merge` 所需功能模块。
+
+---
+
+## 🚀 快速运行
+
+### 🛠️ 环境依赖
+*   **JDK**: 17 +
+*   **Maven**: 3.8 +
+*   **MySQL**: 8.0 +
+*   **Redis**: 5.0 +
+*   **Nacos**: 2.x (可选)
+
+### 🏃‍♂️ 启动步骤
+
+> **Step 1: 获取源码**
+> ```bash
+> git clone https://github.com/RemainderTime/spring-boot-base-demo.git
+> cd spring-boot-base-demo
+> ```
+
+> **Step 2: 数据准备**
+> *   创建数据库 `xf_boot_base`
+> *   修改 `src/main/resources/application.yml` 配好你的数据库账号密码
+> *   *(注：实体类完善，表结构建议通过 JPA 或手动创建)*
+
+> **Step 3: 启动服务**
+>
+> **方式 A: 本地 Maven 运行**
+> ```bash
+> mvn spring-boot:run
+> ```
+>
+> **方式 B: Docker Compose 一键编排**
+> ```bash
+> cd src/main/resources/docker
+> docker-compose -f boot-docker-compose.yml up -d
+> ```
+
+> **Step 4: 探索接口**
+> 打开浏览器访问: `http://localhost:8080/doc.html`
+
+---
+
+## 📅 项目日志
+
+### v1.0.1 (2024-10-12)
+*   ⬆️ **内核升级**: Spring Boot 3.3.3 & MyBatis Plus 3.5.8
+*   📝 **文档重构**: 全面拥抱 SpringDoc OpenAPI，弃用旧版 Swagger
+*   🛡️ **安全加固**: 优化全局异常拦截与参数校验机制
+
+---
+
+## 📈 关注趋势
+
+[![Star History Chart](https://api.star-history.com/svg?repos=RemainderTime/spring-boot-base-demo&type=Date)](https://star-history.com/#RemainderTime/spring-boot-base-demo&Date)
+
+<div align="center">
+<br/>
+
+**喜欢这个项目？请点个 Star ⭐ 支持作者持续更新！**
+
+</div>
+
+
+
 
