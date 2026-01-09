@@ -8,6 +8,7 @@ import cn.xf.basedemo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -27,7 +28,7 @@ public class UserController {
 
     @Operation(summary = "用户登录", description = "用户登录")
     @PostMapping("/login")
-    public RetObj login(@RequestBody LoginInfoRes res) {
+    public RetObj login(@RequestBody @Validated LoginInfoRes res) {
 
         return userService.login(res);
     }

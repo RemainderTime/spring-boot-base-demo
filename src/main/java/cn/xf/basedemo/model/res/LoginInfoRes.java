@@ -1,6 +1,7 @@
 package cn.xf.basedemo.model.res;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -16,6 +17,7 @@ public class LoginInfoRes {
     /**
      * 登录密文
      */
+    @NotBlank(message = "登录密文不能为空")
     @Schema(name = "登录密文")
     private String encryptedData;
 }
