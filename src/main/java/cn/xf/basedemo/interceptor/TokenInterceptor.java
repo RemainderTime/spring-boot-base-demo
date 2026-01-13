@@ -49,6 +49,12 @@ public class TokenInterceptor implements HandlerInterceptor {
             token = request.getParameter("token");
         if (StringUtils.isEmpty(token)) {
             throw new LoginException("请先登录");
+        }else {
+            //验证token
+            if (!token.startsWith("Bearer ")) {
+                throw new LoginException(ResponseCode.USER_INPUT_ERROR);
+            }
+            token = token.substring(7);
         }
         String value = (String) redisTemplate.opsForValue().get("token:" + token);
         if (StringUtils.isEmpty(value)) {

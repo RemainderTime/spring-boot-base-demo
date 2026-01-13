@@ -41,98 +41,56 @@ global:
   rsaPublicKey: MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC_F5UQC1QWsu3QsESQBz9M-GDA9Atm0qVSvwIsy568lyRLi-nq3VvvnmgrlL4yTbngFzyfb2Dn35cNCHsBvIaGuCY3_PpzPqMzVpxr2QlEkhEX9atnJQ1rWexS8QeZtPjpiIwoQrChTzXjD_sYUkDrqSykFplyivf0NSO2WqCBdwIDAQAB
   rsaPrivateKey: MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAL8XlRALVBay7dCwRJAHP0z4YMD0C2bSpVK_AizLnryXJEuL6erdW--eaCuUvjJNueAXPJ9vYOfflw0IewG8hoa4Jjf8-nM-ozNWnGvZCUSSERf1q2clDWtZ7FLxB5m0-OmIjChCsKFPNeMP-xhSQOupLKQWmXKK9_Q1I7ZaoIF3AgMBAAECgYBxTUA61Ry0oL7U_86HP2TO9G4ZuhmQi9EucMaPXOPvmgYRLRIzCbDbMKc_P-BN3zwYnG57cgSZNz9OoPqeGvP_oVTnkoEpVkCSV-JP2p_DK09LdbDqszJXMrxAkPmWGUw8IRMcTJT1xJJcgzFE6T0CmTo-Vk47AnmqfJD4U6o74QJBAPRjVUJKZnrMSnSqKPDL2ThgTo8h7-KFxl_Z-g724lTOFiCmBpi6nCWAcuacFRrrYqxF-r9c4zdIyR7AvLROql8CQQDIK_kRF52dVtwShciZhyeUBLoi0nWV9F8mMGt60NTEER9zPEgPsv2aVn8h97KMWOwmd2Da4EPm25QxOuaKQC_pAkBczcfXp5co9KElkmR_pHl1jiTm97U3qSM-zPDHc_tYxvXiKgoBP4QCPbfkWMsu8MoEr4Jb3vMt0EcHlZtTQTgzAkAfmNla-lhV4sUgY1_T5EK6GbjsED6hag6u74u3ukkrnexR-10ApWdkumydBwV3I_464DM4uZfeVCDjWIHVpuYpAkEA6QLPztGD4V8Q1PqTEeSF3i68CKPM8vO1_mCH2JD7qsqDQcIKkczj5rTg7hlOKwB9V6gSw4CbnOF6moTooRD-cQ
 
-##redis
-#redis:
-#  datasource:
-#    token:
-#      database: 1
-#      host: 122.112.153.128
-#      port: 6379
-#      password: 'redis'
-#      lettuce:
-#        pool:
-#          max-active: 8
-#          max-wait: -1ms
-#          max-idle: 8
-#          min-idle: 0
-#      timeout: 3000ms
+elasticsearch:
+  host: localhost
+  port: 9200
+  username: elastic
+  password: bz5oF*MGy8pKL_I=7KxY  #window系统本地启动 es8.x 重置密码命令：.\elasticsearch-reset-password -u elastic
 
-#oss:
-#  name: alioss
-#  endpoint: ll-oss-pre.lianlianlvyou.com
-#  accessKey:
-#  secretKey:
-#  bucketName:
-#  args:
-#    expireTime: 3600 #过期时间
-#    contentLengthRange: 2000 #大小限制
-##oss:
-##  name: alioss
-##  endpoint: ll-oss-pre.lianlianlvyou.com
-##  accessKey:
-##  secretKey:
-##  bucketName:
-##  args:
-##    expireTime: 3600 #过期时间
-##    contentLengthRange: 2000 #大小限制
-## redis分布式锁
-#redisson:
-#  enabled: true
-#  address: 'redis://192.168.10.113:6379'
-#  password: '123456'
-#  database: 5
-#  connectionPoolSize: 4
-#  connectionMinimumIdleSize: 4
-#
-## 阿里云rocketmq
-#aliyun:
-#  rocketmq:
-#    config:
-#      AccessKey: 1
-#      SecretKey: 1
-#      NAMESRV_ADDR: 1
-#      GROUP_ID: 1
-#    producer:
-#      enabled: true
-#
-#rabbitmq:
-#  configs:
-#    order: #实例名称
-#      host: 192.168.10.111
-#      port: 5672
-#      virtualHost: ll-dev
-#      username: zhangziheng
-#      password: zhangziheng
-#      producer:
-#        enabled: true
-#        exchange: order_status
-#        routingKey: ORDER_COMPLETE
-#        confirmCallback: orderMqConfirmCallback
-#    commonChange:
-#      host: 192.168.10.111
-#      port: 5672
-#      virtualHost: ll-dev
-#      username: zhangziheng
-#      password: zhangziheng
-#      producer:
-#        enabled: false
-#      consumer:
-#        enabled: true
-#        subscribeList:
-#          - queue: 'app-business'
-#            messageListener: commonChangeMessageListener
-#
-##应用可以默认使用的配置文件
-#global:
-#  testCofnig: "aaa"
-#  tokenSecret: '12435twefdsfsdt4tsdcqw43tregdsgd'
-#  tokenExpire: 14400 #10天
-#  smsMqTopic: 'topic_msg'
-#  smsMqTag: 'tag-sms'
-#  rsaPrivateKey: 'MIIEpQIBAAKCAQEAuAltXJI4kMQkucWCeLGK4Zyqw7VUp1JYS1GkJb0eJKCgxqJBzwjl8XpStA1hCv9BEX6SEsm/d2T6SDo+G6ySpfV0RQeZ7v32kE9+Eh0BK1Q8wU91nCa1CM9yfBhKXsQ3DKq2am5oLryNWXdKLXZPgoJbuIONG2G4oKakwUMX3aASp3Cj3rNXLea8ilXjFZ+OEp0DuZ4CsasO1MTaBS84mJhnzRNbuhHq5qyrVI02jw7Fim8siIBsmDDHgBd4l9hj6KAAr0jf9JOHaOp+KxfH76taqqaXI5lZIPG7lCP65iBuNNEqDSc21abcPhgvgK5K4xj9p5sG+V1FBISCE0dPrQIDAQABAoIBAG6dg/UTEhq5OhXKyDwBAqfOgbk2IVacoONMg+wG+rorLdeWKRXmlEcLLfB45i409Agu2l+ekY2SzPhiwXfixxYnLSZchkJmtS9SCEWc11oSvJ24Q8mCXmeYQIikFPdW2nurlA7uo4IL5K20jIo8xVd9QOHreAHQP6eX4gkjaZHUIOSJ2P6iffEQCHbXehoyCoTMLdK+1HTuZdO4C9r/S9f/Y1kLWfV5ogEi0DHJpUy37npinfqPp0LHbgpK2WBPOkQIhKvi/4OQ71EcYR5gyrA7nR+rQyPHdhFzTTyfTNTgmuNFuAYJODN5yd62RQd8i6chMx63tYDoYhCjI/ixv8UCgYEA9S1JTacLrFQP+2ryHnn6A3JOhbzj1Y552Nc1XixI9aJMxxCJGI0PvmzDb46BSLfoOz4yaqL1lBS2vyX4tc1rKL82JiokZhDlnFNS0yQgR03484BGPJ3D1+tTWQV0cXyq0nYOI+m9vPBciI1Lw07tJ5ZqJbTabtcu2aq8WrKMuFsCgYEAwCk0WB5TTQJQgjuuFXT/GU4cIl8/Pa3IgF7Ccd1WVkFr9uI6vBpToN+0i1zAb83Ss9maD3eH1Na/7GiKwzZOJj8Yas6b1UsbcHZA1Yt+cI2WUZf8L8QVYJrUtIkbKbG+jdg/KjjZt8mAO8IcXivUhfmj8XUIBClYCezEZmSIVpcCgYEAupHWmUfHo0Bo1QqB6l0pupuuUyj1OxprcG38B4itkHYL9OOJX+xgEalUYzzO9tYz23kuBmWxeRj2I6kyhK4noF85RnuFLUIoZ/gkK9Xu1jPogOuZByGK2XETAMgc3wteNj9t7Tg+kVtbHvJet+YEo75bUgw4uGX5GdxJ7r62RMcCgYEAgJfSaJm6oxFGcTCg+cj2oaeM2k+lEZCHWaiQNQSqr0ROjMOuDI0No92wg4aJXQh+1U5sc6dI5dzkSL9ZBPQFbkDRBUDINf9yGFt6Xa1g6s9FZcrwv8JXj/NtHneWDtvcqi2pb4bl48DbqKHou/hW22VJGd94gthsCxBACkmCl3cCgYEAp2/KJrDnLwAr4h6SVCufRRuNkZSRI+XITkE4xyQ/UDeL+iwCbX38Jcqa2lxCAXCLk++1xilSF/sJbBVkiDorBU9CC0tI5tPJFfHQodbePx1C0SQE8e0F+wtaeR9Z5m5KzHNs2Gciqw+2nJPU9uFQjUfGdXuIZF2bBvtXBWH+Prk='
-#  rsaPublickey: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuAltXJI4kMQkucWCeLGK4Zyqw7VUp1JYS1GkJb0eJKCgxqJBzwjl8XpStA1hCv9BEX6SEsm/d2T6SDo+G6ySpfV0RQeZ7v32kE9+Eh0BK1Q8wU91nCa1CM9yfBhKXsQ3DKq2am5oLryNWXdKLXZPgoJbuIONG2G4oKakwUMX3aASp3Cj3rNXLea8ilXjFZ+OEp0DuZ4CsasO1MTaBS84mJhnzRNbuhHq5qyrVI02jw7Fim8siIBsmDDHgBd4l9hj6KAAr0jf9JOHaOp+KxfH76taqqaXI5lZIPG7lCP65iBuNNEqDSc21abcPhgvgK5K4xj9p5sG+V1FBISCE0dPrQIDAQAB'
-#  appDowloadUrl: 'http://llzby.cn/s/E9TTlQrJ'
-#  pcAccessUrl: 'http://llzby.cn/s/E9TTlQrJ'
-#  customServiceUrl: 'https://chaten.soboten.com/chat/h5/v2/index.html?sysnum=caf21f78c499463fbb54077f5c4a8efd&channelid=13&source=1&groupid=d16ef9bdcf3b46dc9726bbb00a7ee45b&partnerid=' #智齿客服 + biz_userId
-#
+rocketmq:
+  name-server: ${SERVER_ADDRESS}:9876
+  producer:
+    group: producer-group
+  consumer:
+    group: consumer-group
+    enable-orderly: false
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs # 自定义 API 文档路径
+  swagger-ui:
+    path: /swagger-ui.html # 自定义 Swagger UI 路径
+    enabled: true
+  info:
+    title: 文撩 API 文档
+    description: 这是文撩平台的 API 文档
+    version: v1.0
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    auto-mapping-behavior: full
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启SQL语句打印
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  global-config:
+    # 逻辑删除配置
+    db-config:
+      update-strategy: IGNORED
+      # 删除前
+      logic-not-delete-value: 1
+      # 删除后
+      logic-delete-value: 0
+
+# 参考文章  https://zhuanlan.zhihu.com/p/145359625
+management:
+  health:
+    elasticsearch: #禁用健康检查
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+  endpoint:
+    health:
+      show-details: always
 
