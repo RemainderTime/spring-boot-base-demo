@@ -1,9 +1,9 @@
 package cn.xf.basedemo.interceptor;
 
 import cn.dev33.satoken.stp.StpInterface;
-import cn.xf.basedemo.common.utils.ApplicationContextUtils;
 import cn.xf.basedemo.mappers.SysPermissionMapper;
 import cn.xf.basedemo.mappers.SysRoleMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,19 +18,23 @@ import java.util.List;
 @Component
 public class StpInterfaceImpl implements StpInterface {
 
-	private SysPermissionMapper sysPermissionMapper =  ApplicationContextUtils.getBean(SysPermissionMapper.class);
-	private SysRoleMapper sysRoleMapper =  ApplicationContextUtils.getBean(SysRoleMapper.class);
+	@Autowired
+	private SysPermissionMapper sysPermissionMapper;
+
+	@Autowired
+	private SysRoleMapper sysRoleMapper;
+
 	@Override
 	public List<String> getPermissionList(Object userId, String s) {
-		//获取登录用户权限数据
-		Long aLong = Long.valueOf(userId.toString());
-		List<String> permissionList = sysPermissionMapper.getPermissionListByRoleId(aLong);
+		// 获取登录用户权限数据
+		Long uId = Long.valueOf(userId.toString());
+		List<String> permissionList = sysPermissionMapper.getPermissionListByUserId(uId);
 		return permissionList;
 	}
 
 	@Override
 	public List<String> getRoleList(Object userId, String s) {
-		//获取用户角色数据
+		// 获取用户角色数据
 		return sysRoleMapper.getRoleListByUserId((Long) userId);
 	}
 }

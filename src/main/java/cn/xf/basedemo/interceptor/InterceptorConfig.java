@@ -1,7 +1,6 @@
 package cn.xf.basedemo.interceptor;
 
 import cn.dev33.satoken.interceptor.SaInterceptor;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -17,18 +16,26 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    @Bean
-    public TokenInterceptor tokenInterceptor() {
-        return new TokenInterceptor();
-    }
+    @org.springframework.beans.factory.annotation.Autowired
+    private SaTokenContextInterceptor saTokenContextInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(tokenInterceptor()) //登录逻辑拦截类
-                .addPathPatterns("/**") //需要拦截的请求（设置的全部拦截）
-                .excludePathPatterns("/user/login", "/web/**"); //忽略的请求
-    }
+        // 注册 Sa-Token 拦截器，定义详细认证规则
+        registry.addInterceptor(new SaInterceptor(handler -> {
+            // 指定一条 match 规则
+            cn.dev33.satoken.stp.StpUtil.checkLogin();
+        }))
+                .addPathPatterns("/**")
+                .excludePathPatterns("/user/login", "/web/**", "/swagger-resources/**", "/webjars/**", "/v3/**",
+                        "/doc.html");
 
+        // 注册 Context 拦截器，用于注入 SessionContext
+        registry.addInterceptor(saTokenContextInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/user/login", "/web/**", "/swagger-resources/**", "/webjars/**", "/v3/**",
+                        "/doc.html");
+    }
 
     /**
      * 放行Knife4j请求

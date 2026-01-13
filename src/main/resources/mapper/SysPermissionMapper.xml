@@ -21,7 +21,7 @@
         update_time,update_by
     </sql>
 
-    <select id="getPermissionListByRoleId" resultType="java.lang.String">
+    <select id="getPermissionListByUserId" resultType="java.lang.String">
         select code
         from sys_permission p
                  left join sys_role_permission rp on p.id = rp.permission_id

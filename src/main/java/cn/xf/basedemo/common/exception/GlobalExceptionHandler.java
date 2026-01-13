@@ -24,6 +24,39 @@ import jakarta.servlet.http.HttpServletRequest;
 public class GlobalExceptionHandler {
 
     /**
+     * Sa-Token: not login exception
+     */
+    @ExceptionHandler(cn.dev33.satoken.exception.NotLoginException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public GenericResponse<Void> handleNotLoginException(cn.dev33.satoken.exception.NotLoginException e,
+            HttpServletRequest request) {
+        log.warn("Not logged in [URL:{}]: {}", request.getRequestURI(), e.getMessage());
+        return new GenericResponse<>(401, null, "Please login first");
+    }
+
+    /**
+     * Sa-Token: not permission exception
+     */
+    @ExceptionHandler(cn.dev33.satoken.exception.NotPermissionException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public GenericResponse<Void> handleNotPermissionException(cn.dev33.satoken.exception.NotPermissionException e,
+            HttpServletRequest request) {
+        log.warn("No permission [URL:{}]: {}", request.getRequestURI(), e.getMessage());
+        return new GenericResponse<>(403, null, "No permission to access this resource");
+    }
+
+    /**
+     * Sa-Token: not role exception
+     */
+    @ExceptionHandler(cn.dev33.satoken.exception.NotRoleException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public GenericResponse<Void> handleNotRoleException(cn.dev33.satoken.exception.NotRoleException e,
+            HttpServletRequest request) {
+        log.warn("No role [URL:{}]: {}", request.getRequestURI(), e.getMessage());
+        return new GenericResponse<>(403, null, "Insufficient role privileges");
+    }
+
+    /**
      * 处理登录/认证异常
      */
     @ExceptionHandler(LoginException.class)

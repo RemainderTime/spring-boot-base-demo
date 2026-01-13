@@ -24,3 +24,26 @@ spring:
     import:
       - nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
 
+# Sa-Token Configuration
+sa-token: 
+  # token name (frontend needs to use this name, e.g., Authorization: Bearer xxxx, or just satoken: xxxx)
+  token-name: Authorization
+  # token validity period (seconds), -1 means never expire
+  timeout: 2592000 
+  # token temporary validity (seconds), -1 means never expire
+  activity-timeout: -1 
+  # allow concurrent login
+  is-concurrent: true 
+  # share token api
+  is-share: true 
+  # token style
+  token-style: uuid
+  # log
+  is-log: false
+  # read from cookie
+  is-read-cookie: false
+  # read from header
+  is-read-header: true
+  # read from body
+  is-read-body: false
+

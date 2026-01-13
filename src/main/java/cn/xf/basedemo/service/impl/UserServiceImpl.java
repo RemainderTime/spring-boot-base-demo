@@ -1,7 +1,6 @@
 package cn.xf.basedemo.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
-import cn.xf.basedemo.common.model.EsBaseModel;
 import cn.xf.basedemo.common.model.LoginInfo;
 import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.model.RetObj;
@@ -56,7 +55,8 @@ public class UserServiceImpl implements UserService {
         }
         String loginJson = "";
         try {
-            loginJson = RSAUtils.privateDecryption(res.getEncryptedData(), RSAUtils.getPrivateKey(globalConfig.getRsaPrivateKey()));
+            loginJson = RSAUtils.privateDecryption(res.getEncryptedData(),
+                    RSAUtils.getPrivateKey(globalConfig.getRsaPrivateKey()));
         } catch (Exception e) {
             log.error("解密失败------", e);
         }
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
         if (!StringUtils.isEmpty(loginInfo.check())) {
             return RetObj.error(loginInfo.check());
         }
-        //校验登录账号密码
+        // 校验登录账号密码
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account", loginInfo.getAccount());
         queryWrapper.eq("password", loginInfo.getPwd());
@@ -84,13 +84,16 @@ public class UserServiceImpl implements UserService {
         loginUser.setName(user.getName());
         loginUser.setPhone(user.getPhone());
 
-        String token = JwtTokenUtils.createToken(user.getId());
-        loginUser.setToken(token);
-
-        redisTemplate.opsForValue().set("token:" + token, JSONObject.toJSONString(loginUser), 3600, TimeUnit.SECONDS);
-        redisTemplate.opsForValue().set("user_login_token:" + user.getId(), token, 3600, TimeUnit.SECONDS);
-        //登录成功 写入sa-token中
+        // 登录成功 写入sa-token中
         StpUtil.login(user.getId());
+
+        // 将用户信息缓存到 Session 中，以便后续获取
+        StpUtil.getSession().set("loginUser", loginUser);
+
+        // 获取 Sa-Token 生成的 token 值
+        cn.dev33.satoken.stp.SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+        loginUser.setToken(tokenInfo.tokenValue);
+
         return RetObj.success(loginUser);
     }
 

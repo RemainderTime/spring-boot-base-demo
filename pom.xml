@@ -126,6 +126,17 @@
             <version>${sverlet.version}</version> <!-- 根据需要选择合适的版本 -->
             <scope>provided</scope> <!-- 在Web服务器环境中由服务器提供 -->
         </dependency>
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-spring-boot3-starter</artifactId>
+            <version>${sa-token.version}</version>
+        </dependency>
+        <!-- Sa-Token 整合 Redis （使用 jackson 序列化方式） -->
+        <dependency>
+            <groupId>cn.dev33</groupId>
+            <artifactId>sa-token-redis-jackson</artifactId>
+            <version>${sa-token.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
