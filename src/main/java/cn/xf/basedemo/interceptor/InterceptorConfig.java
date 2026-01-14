@@ -1,6 +1,7 @@
 package cn.xf.basedemo.interceptor;
 
 import cn.dev33.satoken.interceptor.SaInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -16,25 +17,32 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class InterceptorConfig implements WebMvcConfigurer {
 
-    @org.springframework.beans.factory.annotation.Autowired
+    @Autowired
     private SaTokenContextInterceptor saTokenContextInterceptor;
+
+    // 统一配置排除路径，避免重复书写
+    private static final String[] EXCLUDE_PATHS = {
+            "/user/login",
+            "/web/**",
+            "/swagger-resources/**",
+            "/webjars/**",
+            "/v3/**",
+            "/doc.html"
+    };
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 注册 Sa-Token 拦截器，定义详细认证规则
+        // 1. 注册 Sa-Token 拦截器 (负责鉴权)
         registry.addInterceptor(new SaInterceptor(handler -> {
-            // 指定一条 match 规则
             cn.dev33.satoken.stp.StpUtil.checkLogin();
         }))
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login", "/web/**", "/swagger-resources/**", "/webjars/**", "/v3/**",
-                        "/doc.html");
+                .excludePathPatterns(EXCLUDE_PATHS);
 
-        // 注册 Context 拦截器，用于注入 SessionContext
+        // 2. 注册 Context 拦截器 (负责注入ThreadLocal，兼容旧代码)
         registry.addInterceptor(saTokenContextInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/user/login", "/web/**", "/swagger-resources/**", "/webjars/**", "/v3/**",
-                        "/doc.html");
+                .excludePathPatterns(EXCLUDE_PATHS);
     }
 
     /**
