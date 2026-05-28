@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -47,10 +48,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Override
     public RetObj login(LoginInfoRes res) {
 
-        if (Objects.isNull(res) || StringUtils.isEmpty(res.getEncryptedData())) {
+        if (Objects.isNull(res) || !StringUtils.hasText(res.getEncryptedData())) {
             return null;
         }
         String loginJson = "";
@@ -67,15 +70,14 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             return RetObj.error("账号或密码错误");
         }
-        if (!StringUtils.isEmpty(loginInfo.check())) {
+        if (StringUtils.hasText(loginInfo.check())) {
             return RetObj.error(loginInfo.check());
         }
-        // 校验登录账号密码
-        QueryWrapper queryWrapper = new QueryWrapper();
+        //校验登录账号密码
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("account", loginInfo.getAccount());
-        queryWrapper.eq("password", loginInfo.getPwd());
         User user = userMapper.selectOne(queryWrapper);
-        if (Objects.isNull(user)) {
+        if (Objects.isNull(user) || !passwordEncoder.matches(loginInfo.getPwd(), user.getPassword())) {
             return RetObj.error("账号或密码错误");
         }
         LoginUser loginUser = new LoginUser();

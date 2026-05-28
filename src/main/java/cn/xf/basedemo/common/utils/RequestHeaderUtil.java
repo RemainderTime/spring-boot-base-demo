@@ -52,9 +52,9 @@ public class RequestHeaderUtil {
     public static String getToken(HttpServletRequest request) {
         //登录处理
         String token = request.getHeader("Authorization");
-        if (StringUtils.isEmpty(token))
+        if (!StringUtils.hasText(token))
             token = request.getParameter("token");
-        if (StringUtils.isEmpty(token)) {
+        if (!StringUtils.hasText(token)) {
             throw new LoginException("请先登录");
         }
 

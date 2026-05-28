@@ -46,20 +46,20 @@ public class RetObj<T> {
     }
 
     public static <T> RetObj<T> success() {
-        return new RetObj(SystemStatus.SUSSES);
+        return new RetObj<>(SystemStatus.SUCCESS);
     }
 
     public static <T> RetObj<T> success(T data) {
-        return new RetObj(SystemStatus.SUSSES, data);
+        return new RetObj<>(SystemStatus.SUCCESS, data);
     }
 
 
     public static <T> RetObj<T> error(SystemStatus status) {
-        return new RetObj(status);
+        return new RetObj<>(status);
     }
 
     public static <T> RetObj<T> error(String errorMsg) {
-        return new RetObj(SystemStatus.ERROR.getCode(), errorMsg);
+        return new RetObj<>(SystemStatus.ERROR.getCode(), errorMsg);
     }
 
 }
