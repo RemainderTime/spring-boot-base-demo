@@ -66,7 +66,7 @@ springdoc:
 
 mybatis-plus:
   configuration:
-    map-underscore-to-camel-case: false
+    map-underscore-to-camel-case: true
     auto-mapping-behavior: full
     #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启SQL语句打印
   mapper-locations: classpath*:mapper/**/*Mapper.xml
