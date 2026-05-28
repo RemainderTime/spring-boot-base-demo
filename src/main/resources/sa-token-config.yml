@@ -2,6 +2,8 @@
 sa-token:
   # token name (frontend needs to use this name, e.g., Authorization: Bearer xxxx, or just satoken: xxxx)
   token-name: Authorization
+  # token prefix (standard for Bearer tokens)
+  token-prefix: Bearer
   # token validity period (seconds), -1 means never expire
   timeout: 2592000
   # token temporary validity (seconds), -1 means never expire
