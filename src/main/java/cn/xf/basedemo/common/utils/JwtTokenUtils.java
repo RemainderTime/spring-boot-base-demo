@@ -106,7 +106,7 @@ public class JwtTokenUtils {
 	 */
 	public static Integer getUserId(String token) {
 		Map<String, Claim> claims = verifyToken(token);
-		if (claims != null) {
+		if (claims == null) {
 			return null;
 		}
 

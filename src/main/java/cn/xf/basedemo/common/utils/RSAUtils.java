@@ -1,8 +1,5 @@
 package cn.xf.basedemo.common.utils;
 
-import org.apache.tomcat.util.codec.binary.Base64;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
 import java.security.*;
@@ -11,6 +8,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +18,7 @@ import java.util.Map;
  * @description: 加密工具类
  * @author: xiongfeng
  * @create: 2022-06-20 10:37
- **/
+ * **/
 public class RSAUtils {
 
     //算法类型
@@ -49,10 +47,10 @@ public class RSAUtils {
         kpg.initialize(ENCRYPT_SIZE);
         KeyPair keyPair = kpg.generateKeyPair();
         PublicKey aPublic = keyPair.getPublic();
-        String publicKey = Base64.encodeBase64URLSafeString(aPublic.getEncoded());
+        String publicKey = Base64.getUrlEncoder().withoutPadding().encodeToString(aPublic.getEncoded());
 
         PrivateKey aPrivate = keyPair.getPrivate();
-        String privateKey = Base64.encodeBase64URLSafeString(aPrivate.getEncoded());
+        String privateKey = Base64.getUrlEncoder().withoutPadding().encodeToString(aPrivate.getEncoded());
 
         Map<String, String> map = new HashMap<>();
 
@@ -73,7 +71,7 @@ public class RSAUtils {
     public static RSAPublicKey getPublicKey(String publicKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException {
         // 通过X509编码的Key指令获得公钥对象
         KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(Base64.decodeBase64URLSafe(publicKeyStr));
+        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(Base64.getUrlDecoder().decode(publicKeyStr));
         RSAPublicKey key = (RSAPublicKey) keyFactory.generatePublic(x509KeySpec);
         return key;
     }
@@ -89,7 +87,7 @@ public class RSAUtils {
     public static RSAPrivateKey getPrivateKey(String privateKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(Base64.decodeBase64URLSafe(privateKeyStr));
+        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(Base64.getUrlDecoder().decode(privateKeyStr));
         RSAPrivateKey privateKey = (RSAPrivateKey) keyFactory.generatePrivate(pkcs8EncodedKeySpec);
         return privateKey;
     }
@@ -109,8 +107,7 @@ public class RSAUtils {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
             byte[] bytes = cipher.doFinal(data.getBytes());
-            return Base64.encodeBase64URLSafeString(bytes);
-//            return Base64.encodeBase64URLSafeString(rsaSplitCodec(cipher, Cipher.ENCRYPT_MODE, data.getBytes(CHARSET), publicKey.getModulus().bitLength()));
+            return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -121,9 +118,7 @@ public class RSAUtils {
             Cipher cipher = Cipher.getInstance(RSA);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-//            byte[] bytes = cipher.doFinal(Base64.decodeBase64(data.getBytes(CHARSET)));
-//            return new String(bytes);
-            return new String(rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, Base64.decodeBase64(data.getBytes(CHARSET), 0, data.getBytes(CHARSET).length), privateKey.getModulus().bitLength()), CHARSET);
+            return new String(rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, Base64.getUrlDecoder().decode(data.getBytes(CHARSET)), privateKey.getModulus().bitLength()), CHARSET);
         } catch (Exception e) {
             throw new RuntimeException("解密字符串[" + data + "]时遇到异常", e);
         }
@@ -137,11 +132,10 @@ public class RSAUtils {
         } else {
             maxBlock = keySize / 8 - 11;
         }
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
         int offSet = 0;
-        byte[] buff;
         int i = 0;
-        try {
+        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
+            byte[] buff;
             while (datas.length > offSet) {
                 if (datas.length - offSet > maxBlock) {
                     //可以调用以下的doFinal（）方法完成加密或解密数据：
@@ -153,12 +147,10 @@ public class RSAUtils {
                 i++;
                 offSet = i * maxBlock;
             }
+            return out.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("加解密阀值为[" + maxBlock + "]的数据时发生异常", e);
         }
-        byte[] resultDatas = out.toByteArray();
-        IOUtils.closeQuietly(out);
-        return resultDatas;
     }
 
     public static void main(String[] args) {

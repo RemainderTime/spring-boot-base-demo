@@ -1,5 +1,7 @@
 package cn.xf.basedemo.common.exception;
 
+import cn.xf.basedemo.common.enums.SystemStatus;
+import cn.xf.basedemo.common.model.RetObj;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -28,9 +30,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(LoginException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public GenericResponse<Void> handleLoginException(LoginException e, HttpServletRequest request) {
-        log.warn("认证失败 [URL:{}]: code={}, message={}", request.getRequestURI(), e.getCode(), e.getMessage());
-        return new GenericResponse<>(e.getCode(), null, e.getMessage());
+    public RetObj<Void> handleLoginException(LoginException e, HttpServletRequest request) {
+        log.warn("认证失败 [URL:{}]: code={}, message={}", request.getRequestURI(), e.getStatus().getCode(), e.getMessage());
+        return new RetObj<>(e.getStatus().getCode(), e.getMessage());
     }
 
     /**
@@ -38,9 +40,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST) // 或者使用 HttpStatus.OK，根据前端约定
-    public GenericResponse<Void> handleBusinessException(BusinessException e, HttpServletRequest request) {
-        log.warn("业务异常 [URL:{}]: code={}, message={}", request.getRequestURI(), e.getCode(), e.getMessage());
-        return new GenericResponse<>(e.getCode(), null, e.getMessage());
+    public RetObj<Void> handleBusinessException(BusinessException e, HttpServletRequest request) {
+        log.warn("业务异常 [URL:{}]: code={}, message={}", request.getRequestURI(), e.getStatus().getCode(), e.getMessage());
+        return new RetObj<>(e.getStatus().getCode(), e.getMessage());
     }
 
     /**
@@ -48,7 +50,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler({ MethodArgumentNotValidException.class, BindException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public GenericResponse<Void> handleValidationException(Exception e, HttpServletRequest request) {
+    public RetObj<Void> handleValidationException(Exception e, HttpServletRequest request) {
         BindingResult bindingResult = null;
         if (e instanceof MethodArgumentNotValidException) {
             bindingResult = ((MethodArgumentNotValidException) e).getBindingResult();
@@ -64,7 +66,7 @@ public class GlobalExceptionHandler {
             }
         }
         log.warn("参数校验失败 [URL:{}]: {}", request.getRequestURI(), errorMsg);
-        return new GenericResponse<>(ResponseCode.USER_INPUT_ERROR.getCode(), null, errorMsg);
+        return new RetObj<>(SystemStatus.USER_INPUT_ERROR.getCode(), errorMsg);
     }
 
     /**
@@ -72,9 +74,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public GenericResponse<Void> handleSystemException(Exception e, HttpServletRequest request) {
+    public RetObj<Void> handleSystemException(Exception e, HttpServletRequest request) {
         // 生产级关键点：必须记录异常堆栈，否则无法排查 BUG
         log.error("系统发生未知异常 [URL:{}]", request.getRequestURI(), e);
-        return new GenericResponse<>(500, null, "系统内部繁忙，请稍后再试");
+        return new RetObj<>(SystemStatus.ERROR.getCode(), "系统内部繁忙，请稍后再试");
     }
 }

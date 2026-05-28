@@ -1,7 +1,7 @@
 package cn.xf.basedemo.interceptor;
 
 import cn.xf.basedemo.common.exception.LoginException;
-import cn.xf.basedemo.common.exception.ResponseCode;
+import cn.xf.basedemo.common.enums.SystemStatus;
 import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.utils.ApplicationContextUtils;
 import com.alibaba.fastjson.JSONObject;
@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @description:
  * @author: xiongfeng
  * @create: 2022-06-16 14:17
+ * @component
  **/
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
@@ -45,28 +46,28 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
         //登录处理
         String token = request.getHeader("Authorization");
-        if (StringUtils.isEmpty(token))
+        if (!StringUtils.hasText(token))
             token = request.getParameter("token");
-        if (StringUtils.isEmpty(token)) {
+        if (!StringUtils.hasText(token)) {
             throw new LoginException("请先登录");
         }else {
             //验证token
             if (!token.startsWith("Bearer ")) {
-                throw new LoginException(ResponseCode.USER_INPUT_ERROR);
+                throw new LoginException(SystemStatus.USER_INPUT_ERROR);
             }
             token = token.substring(7);
         }
         String value = (String) redisTemplate.opsForValue().get("token:" + token);
-        if (StringUtils.isEmpty(value)) {
+        if (!StringUtils.hasText(value)) {
             throw new LoginException();
         }
         JSONObject jsonObject = JSONObject.parseObject(value);
         //JSON对象转换成Java对象
         LoginUser loginUserInfo = JSONObject.toJavaObject(jsonObject, LoginUser.class);
         if (loginUserInfo == null || loginUserInfo.getId() <= 0) {
-            throw new LoginException(ResponseCode.USER_INPUT_ERROR);
+            throw new LoginException(SystemStatus.USER_INPUT_ERROR);
         }
-        redisTemplate.expire(token, 86700, TimeUnit.SECONDS);
+        redisTemplate.expire("token:" + token, 86700, TimeUnit.SECONDS);
 
         //用户信息设置到上下文
         SessionContext.getInstance().set(loginUserInfo);

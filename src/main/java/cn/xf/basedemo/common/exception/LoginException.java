@@ -1,5 +1,6 @@
 package cn.xf.basedemo.common.exception;
 
+import cn.xf.basedemo.common.enums.SystemStatus;
 import lombok.Getter;
 
 /**
@@ -11,30 +12,30 @@ import lombok.Getter;
 @Getter
 public class LoginException extends RuntimeException{
 
-    private final ResponseCode code;
+    private final SystemStatus status;
 
     public LoginException() {
-        super(String.format("%s", ResponseCode.AUTHENTICATION_NEEDED.getMessage()));
-        this.code = ResponseCode.AUTHENTICATION_NEEDED;
+        super(String.format("%s", SystemStatus.UNAUTHORIZED.getErrorMessage()));
+        this.status = SystemStatus.UNAUTHORIZED;
     }
 
     public LoginException(Throwable e) {
         super(e);
-        this.code = ResponseCode.AUTHENTICATION_NEEDED;
+        this.status = SystemStatus.UNAUTHORIZED;
     }
 
     public LoginException(String msg) {
-        this(ResponseCode.AUTHENTICATION_NEEDED, msg);
+        this(SystemStatus.UNAUTHORIZED, msg);
     }
 
-    public LoginException(ResponseCode code) {
-        super(String.format("%s", code.getMessage()));
-        this.code = code;
+    public LoginException(SystemStatus status) {
+        super(String.format("%s", status.getErrorMessage()));
+        this.status = status;
     }
 
-    public LoginException(ResponseCode code, String msg) {
+    public LoginException(SystemStatus status, String msg) {
         super(msg);
-        this.code = code;
+        this.status = status;
     }
 
 }
