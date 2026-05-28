@@ -30,10 +30,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(cn.dev33.satoken.exception.NotLoginException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public GenericResponse<Void> handleNotLoginException(cn.dev33.satoken.exception.NotLoginException e,
+    public RetObj<Void> handleNotLoginException(cn.dev33.satoken.exception.NotLoginException e,
             HttpServletRequest request) {
-        log.warn("Not logged in [URL:{}]: {}", request.getRequestURI(), e.getMessage());
-        return new GenericResponse<>(401, null, "Please login first");
+        log.warn("未登录或 Token 失效 [URL:{}]: {}", request.getRequestURI(), e.getMessage());
+        return new RetObj<>(SystemStatus.UNAUTHORIZED.getCode(), "未登录或登录已过期");
     }
 
     /**
@@ -41,10 +41,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(cn.dev33.satoken.exception.NotPermissionException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public GenericResponse<Void> handleNotPermissionException(cn.dev33.satoken.exception.NotPermissionException e,
+    public RetObj<Void> handleNotPermissionException(cn.dev33.satoken.exception.NotPermissionException e,
             HttpServletRequest request) {
-        log.warn("No permission [URL:{}]: {}", request.getRequestURI(), e.getMessage());
-        return new GenericResponse<>(403, null, "No permission to access this resource");
+        log.warn("无权限访问 [URL:{}]: {}", request.getRequestURI(), e.getMessage());
+        return new RetObj<>(SystemStatus.FORBIDDEN.getCode(), "没有访问该资源的权限");
     }
 
     /**
@@ -52,10 +52,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(cn.dev33.satoken.exception.NotRoleException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public GenericResponse<Void> handleNotRoleException(cn.dev33.satoken.exception.NotRoleException e,
+    public RetObj<Void> handleNotRoleException(cn.dev33.satoken.exception.NotRoleException e,
             HttpServletRequest request) {
-        log.warn("No role [URL:{}]: {}", request.getRequestURI(), e.getMessage());
-        return new GenericResponse<>(403, null, "Insufficient role privileges");
+        log.warn("角色不足 [URL:{}]: {}", request.getRequestURI(), e.getMessage());
+        return new RetObj<>(SystemStatus.FORBIDDEN.getCode(), "角色权限不足");
     }
 
     /**

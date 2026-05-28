@@ -35,6 +35,7 @@ public class StpInterfaceImpl implements StpInterface {
 	@Override
 	public List<String> getRoleList(Object userId, String s) {
 		// 获取用户角色数据
-		return sysRoleMapper.getRoleListByUserId((Long) userId);
+		Long uId = Long.valueOf(userId.toString());
+		return sysRoleMapper.getRoleListByUserId(uId);
 	}
 }

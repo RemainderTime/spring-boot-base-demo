@@ -33,8 +33,8 @@ public class SaTokenContextInterceptor implements HandlerInterceptor {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
-            ModelAndView modelAndView) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+            throws Exception {
         // 请求结束后清理 ThreadLocal，防止内存泄漏
         SessionContext.getInstance().clear();
     }

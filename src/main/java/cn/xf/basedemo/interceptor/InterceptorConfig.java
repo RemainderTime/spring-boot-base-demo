@@ -27,7 +27,9 @@ public class InterceptorConfig implements WebMvcConfigurer {
             "/swagger-resources/**",
             "/webjars/**",
             "/v3/**",
-            "/doc.html"
+            "/doc.html",
+            "/swagger-ui.html",
+            "/swagger-ui/**"
     };
 
     @Override
