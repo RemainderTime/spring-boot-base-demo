@@ -23,31 +23,31 @@ public class SysRoleMenu implements Serializable {
     /**
      * 角色ID（sys_role_menu.role_id）
      */
-    private Long role_id;
+    private Long roleId;
 
     /**
      * 菜单ID（sys_role_menu.menu_id）
      */
-    private Long menu_id;
+    private Long menuId;
 
     /**
      * 创建时间（sys_role_menu.create_time）
      */
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 创建人（sys_role_menu.create_by）
      */
-    private String create_by;
+    private String createBy;
 
     /**
      * 更新时间（sys_role_menu.update_time）
      */
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 更新人（sys_role_menu.update_by）
      */
-    private String update_by;
+    private String updateBy;
 
 }

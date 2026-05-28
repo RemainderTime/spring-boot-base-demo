@@ -33,7 +33,7 @@ public class SysMenu implements Serializable {
     /**
      * 父菜单ID（sys_menu.parent_id，树结构）
      */
-    private Long parent_id;
+    private Long parentId;
 
     /**
      * 菜单类型（sys_menu.type），0=目录,1=菜单,2=按钮
@@ -48,20 +48,20 @@ public class SysMenu implements Serializable {
     /**
      * 创建时间（sys_menu.create_time）
      */
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 创建人（sys_menu.create_by）
      */
-    private String create_by;
+    private String createBy;
 
     /**
      * 更新时间（sys_menu.update_time）
      */
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 更新人（sys_menu.update_by）
      */
-    private String update_by;
+    private String updateBy;
 }

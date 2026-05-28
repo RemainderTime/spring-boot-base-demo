@@ -23,31 +23,31 @@ public class SysRolePermission implements Serializable {
     /**
      * 角色ID（sys_role_permission.role_id）
      */
-    private Long role_id;
+    private Long roleId;
 
     /**
      * 权限ID（sys_role_permission.permission_id）
      */
-    private Long permission_id;
+    private Long permissionId;
 
     /**
      * 创建时间（sys_role_permission.create_time）
      */
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 创建人（sys_role_permission.create_by）
      */
-    private String create_by;
+    private String createBy;
 
     /**
      * 更新时间（sys_role_permission.update_time）
      */
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 更新人（sys_role_permission.update_by）
      */
-    private String update_by;
+    private String updateBy;
 
 }

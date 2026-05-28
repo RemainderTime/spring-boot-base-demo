@@ -33,25 +33,25 @@ public class SysPermission implements Serializable {
     /**
      * 所属菜单ID（sys_permission.menu_id）
      */
-    private Long menu_id;
+    private Long menuId;
 
     /**
      * 创建时间（sys_permission.create_time）
      */
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 创建人（sys_permission.create_by）
      */
-    private String create_by;
+    private String createBy;
 
     /**
      * 更新时间（sys_permission.update_time）
      */
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 更新人（sys_permission.update_by）
      */
-    private String update_by;
+    private String updateBy;
 }

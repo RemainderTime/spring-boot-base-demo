@@ -24,31 +24,31 @@ public class SysUserRole implements Serializable {
     /**
      * 用户ID（sys_user_role.user_id）
      */
-    private Long user_id;
+    private Long userId;
 
     /**
      * 角色ID（sys_user_role.role_id）
      */
-    private Long role_id;
+    private Long roleId;
 
     /**
      * 创建时间（sys_user_role.create_time）
      */
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 创建人（sys_user_role.create_by）
      */
-    private String create_by;
+    private String createBy;
 
     /**
      * 更新时间（sys_user_role.update_time）
      */
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 更新人（sys_user_role.update_by）
      */
-    private String update_by;
+    private String updateBy;
 
 }

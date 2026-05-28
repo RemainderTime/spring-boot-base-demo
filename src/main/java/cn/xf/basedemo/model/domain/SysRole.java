@@ -38,21 +38,21 @@ public class SysRole implements Serializable {
     /**
      * 创建时间（sys_role.create_time）
      */
-    private Date create_time;
+    private Date createTime;
 
     /**
      * 创建人（sys_role.create_by）
      */
-    private String create_by;
+    private String createBy;
 
     /**
      * 更新时间（sys_role.update_time）
      */
-    private Date update_time;
+    private Date updateTime;
 
     /**
      * 更新人（sys_role.update_by）
      */
-    private String update_by;
+    private String updateBy;
 
 }
