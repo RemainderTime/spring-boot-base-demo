@@ -11,7 +11,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -164,21 +163,24 @@ public class RSAUtils {
 
     public static void main(String[] args) {
 
-        Map<String, String> encryptKey = createEncryptKey();
-        String publicKey = encryptKey.get("publicKey");
-        String privateKey = encryptKey.get("privateKey");
-
-        System.out.println("公匙加密串：" + publicKey);
-        System.out.println("私匙加密串：" + privateKey);
-
-        System.out.println();
+//        Map<String, String> encryptKey = createEncryptKey();
+//        String publicKey = encryptKey.get("publicKey");
+//        String privateKey = encryptKey.get("privateKey");
+//
+//        System.out.println("公匙加密串：" + publicKey);
+//        System.out.println("私匙加密串：" + privateKey);
+//
+//        System.out.println();
 //
         String data = "data";
         //加密
         try {
-            String s = publicEncrypt(data, getPublicKey(publicKey));
+            String s = publicEncrypt(data, getPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC_F5UQC1QWsu3QsESQBz9M-GDA9Atm0qVSvwIsy568lyRLi-nq3VvvnmgrlL4yTbngFzyfb2Dn35cNCHsBvIaGuCY3_PpzPqMzVpxr2QlEkhEX9atnJQ1rWexS8QeZtPjpiIwoQrChTzXjD_sYUkDrqSykFplyivf0NSO2WqCBdwIDAQAB"));
             System.out.println("加密后密文：" + s);
-            String s1 = privateDecryption(s, getPrivateKey(privateKey));
+
+            String ss = "bPrP3VQpVNj7jxzSvVRQQpOCzg4c9HAMd/Sesda0SOxmWbNzP8SnhayV2H9Jpih2sf26O8dOqiNE7V1u5NPgQBIPi6LqX2QiFTjynVLxQBUmISfmQ2Q6K3sjHBIRIhuZPrXijw7CextUUQwzh4VvEVkjyaUnqlMXVRkUGlgqP7M=";
+            String privateKey1 = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALiJJ6RPMMh-ETrmppOG7JKINPSFaaZoHjzZkyQl3AcfrpKMmH82j_Pxl4mPvvgKtbR20N-88-nJLT4v4aOz9XYVl5ruE59SsJl_T8YqN-i8L8KH8Wptd0_ee7nDhF4-OGEi-o330daFv20eLpboy6nDkWLmLihKC0jEZWK8MLZzAgMBAAECgYAEhO9gmcPjFRtM6vsnX8WJbSaG2oGU3rXm3Zk56Gd0ETWQRzsw2mA6JC-G4etWXcTHb6V75T-_-PpPrJKFFNItEH-WFRS36xneomycxRG1YTfK1SsGLGF0BV3bLVZx8cQz7VsBY4vqbRCSKtcOZBJpnxI6iHAv07i8w34F6qjfsQJBAORnKUuJQ_GsHHBPT1VhMYjXVepAfTrWtCzRQ648KavbHLAGaRIhX10uj-hAhZLafDqQF8Y7T7GHTlasRL9ubWsCQQDO1R3KScJJSR3KDsnSsF0YCw7V28cr_OVAwiPoro90Me6MUz9yKV88gQlTuJkNFMuu_YdPXYKjlzNVg0zFmtUZAkEAoe9mPtDeZD0TmKkSZUVYul1543C_mPTan5_qrWCoZtkd2MtiuWEB3O4DR7ZfPcQ8KcU5pektUn_NEfRndZYUawJBAJfydOoxeawBLQNODfLcYefR59owlYe5SGpktaCw7O596DPqzId_4Vk_qqx4xueXSXOLCabCmcC4yZue0_2vm7ECQQDLrzXL-BpSqxbvtE0gNKcgaSkEUSOh1QmQFPCHERsOBxcflM6ej71STKglB21JD9m6tM2RySgbtUx4TfOuJTek";
+            String s1 = privateDecryption(ss, getPrivateKey(privateKey1));
             System.out.println("解密后明文：" + s1);
 
         } catch (Exception e) {
@@ -187,6 +189,4 @@ public class RSAUtils {
 
 
     }
-
-
 }
