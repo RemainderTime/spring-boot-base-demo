@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -48,8 +47,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
     @Override
     public RetObj login(LoginInfoRes res) {
 
@@ -77,7 +74,7 @@ public class UserServiceImpl implements UserService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("account", loginInfo.getAccount());
         User user = userMapper.selectOne(queryWrapper);
-        if (Objects.isNull(user) || !passwordEncoder.matches(loginInfo.getPwd(), user.getPassword())) {
+        if (Objects.isNull(user) || !loginInfo.getPwd().equals(user.getPassword())) {
             return RetObj.error("账号或密码错误");
         }
         LoginUser loginUser = new LoginUser();
