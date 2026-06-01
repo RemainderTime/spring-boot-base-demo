@@ -1,5 +1,8 @@
 package cn.xf.basedemo.common.utils;
 
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
 import java.security.*;
@@ -18,7 +21,7 @@ import java.util.Map;
  * @description: 加密工具类
  * @author: xiongfeng
  * @create: 2022-06-20 10:37
- * **/
+ **/
 public class RSAUtils {
 
     //算法类型
@@ -47,10 +50,10 @@ public class RSAUtils {
         kpg.initialize(ENCRYPT_SIZE);
         KeyPair keyPair = kpg.generateKeyPair();
         PublicKey aPublic = keyPair.getPublic();
-        String publicKey = Base64.getUrlEncoder().withoutPadding().encodeToString(aPublic.getEncoded());
+        String publicKey = Base64.encodeBase64URLSafeString(aPublic.getEncoded());
 
         PrivateKey aPrivate = keyPair.getPrivate();
-        String privateKey = Base64.getUrlEncoder().withoutPadding().encodeToString(aPrivate.getEncoded());
+        String privateKey = Base64.encodeBase64URLSafeString(aPrivate.getEncoded());
 
         Map<String, String> map = new HashMap<>();
 
@@ -71,7 +74,7 @@ public class RSAUtils {
     public static RSAPublicKey getPublicKey(String publicKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException {
         // 通过X509编码的Key指令获得公钥对象
         KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(Base64.getUrlDecoder().decode(publicKeyStr));
+        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(Base64.decodeBase64URLSafe(publicKeyStr));
         RSAPublicKey key = (RSAPublicKey) keyFactory.generatePublic(x509KeySpec);
         return key;
     }
@@ -87,7 +90,7 @@ public class RSAUtils {
     public static RSAPrivateKey getPrivateKey(String privateKeyStr) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         KeyFactory keyFactory = KeyFactory.getInstance(RSA);
-        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(Base64.getUrlDecoder().decode(privateKeyStr));
+        PKCS8EncodedKeySpec pkcs8EncodedKeySpec = new PKCS8EncodedKeySpec(Base64.decodeBase64URLSafe(privateKeyStr));
         RSAPrivateKey privateKey = (RSAPrivateKey) keyFactory.generatePrivate(pkcs8EncodedKeySpec);
         return privateKey;
     }
@@ -107,7 +110,8 @@ public class RSAUtils {
             cipher.init(Cipher.ENCRYPT_MODE, publicKey);
 
             byte[] bytes = cipher.doFinal(data.getBytes());
-            return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+            return Base64.encodeBase64URLSafeString(bytes);
+//            return Base64.encodeBase64URLSafeString(rsaSplitCodec(cipher, Cipher.ENCRYPT_MODE, data.getBytes(CHARSET), publicKey.getModulus().bitLength()));
         } catch (Exception e) {
             throw new RuntimeException();
         }
@@ -118,7 +122,9 @@ public class RSAUtils {
             Cipher cipher = Cipher.getInstance(RSA);
             cipher.init(Cipher.DECRYPT_MODE, privateKey);
 
-            return new String(rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, Base64.getUrlDecoder().decode(data.getBytes(CHARSET)), privateKey.getModulus().bitLength()), CHARSET);
+//            byte[] bytes = cipher.doFinal(Base64.decodeBase64(data.getBytes(CHARSET)));
+//            return new String(bytes);
+            return new String(rsaSplitCodec(cipher, Cipher.DECRYPT_MODE, Base64.decodeBase64(data.getBytes(CHARSET), 0, data.getBytes(CHARSET).length), privateKey.getModulus().bitLength()), CHARSET);
         } catch (Exception e) {
             throw new RuntimeException("解密字符串[" + data + "]时遇到异常", e);
         }
@@ -132,10 +138,11 @@ public class RSAUtils {
         } else {
             maxBlock = keySize / 8 - 11;
         }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
         int offSet = 0;
+        byte[] buff;
         int i = 0;
-        try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            byte[] buff;
+        try {
             while (datas.length > offSet) {
                 if (datas.length - offSet > maxBlock) {
                     //可以调用以下的doFinal（）方法完成加密或解密数据：
@@ -147,33 +154,32 @@ public class RSAUtils {
                 i++;
                 offSet = i * maxBlock;
             }
-            return out.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException("加解密阀值为[" + maxBlock + "]的数据时发生异常", e);
         }
+        byte[] resultDatas = out.toByteArray();
+        IOUtils.closeQuietly(out);
+        return resultDatas;
     }
 
     public static void main(String[] args) {
 
-//        Map<String, String> encryptKey = createEncryptKey();
-//        String publicKey = encryptKey.get("publicKey");
-//        String privateKey = encryptKey.get("privateKey");
-//
-//        System.out.println("公匙加密串：" + publicKey);
-//        System.out.println("私匙加密串：" + privateKey);
-//
-//        System.out.println();
+        Map<String, String> encryptKey = createEncryptKey();
+        String publicKey = encryptKey.get("publicKey");
+        String privateKey = encryptKey.get("privateKey");
+
+        System.out.println("公匙加密串：" + publicKey);
+        System.out.println("私匙加密串：" + privateKey);
+
+        System.out.println();
 //
         String data = "data";
         //加密
         try {
-            String s = publicEncrypt(data, getPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC_F5UQC1QWsu3QsESQBz9M-GDA9Atm0qVSvwIsy568lyRLi-nq3VvvnmgrlL4yTbngFzyfb2Dn35cNCHsBvIaGuCY3_PpzPqMzVpxr2QlEkhEX9atnJQ1rWexS8QeZtPjpiIwoQrChTzXjD_sYUkDrqSykFplyivf0NSO2WqCBdwIDAQAB"));
+            String s = publicEncrypt(data, getPublicKey(publicKey));
             System.out.println("加密后密文：" + s);
-
-//            String ss = "bPrP3VQpVNj7jxzSvVRQQpOCzg4c9HAMd/Sesda0SOxmWbNzP8SnhayV2H9Jpih2sf26O8dOqiNE7V1u5NPgQBIPi6LqX2QiFTjynVLxQBUmISfmQ2Q6K3sjHBIRIhuZPrXijw7CextUUQwzh4VvEVkjyaUnqlMXVRkUGlgqP7M=";
-//            String privateKey1 = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALiJJ6RPMMh-ETrmppOG7JKINPSFaaZoHjzZkyQl3AcfrpKMmH82j_Pxl4mPvvgKtbR20N-88-nJLT4v4aOz9XYVl5ruE59SsJl_T8YqN-i8L8KH8Wptd0_ee7nDhF4-OGEi-o330daFv20eLpboy6nDkWLmLihKC0jEZWK8MLZzAgMBAAECgYAEhO9gmcPjFRtM6vsnX8WJbSaG2oGU3rXm3Zk56Gd0ETWQRzsw2mA6JC-G4etWXcTHb6V75T-_-PpPrJKFFNItEH-WFRS36xneomycxRG1YTfK1SsGLGF0BV3bLVZx8cQz7VsBY4vqbRCSKtcOZBJpnxI6iHAv07i8w34F6qjfsQJBAORnKUuJQ_GsHHBPT1VhMYjXVepAfTrWtCzRQ648KavbHLAGaRIhX10uj-hAhZLafDqQF8Y7T7GHTlasRL9ubWsCQQDO1R3KScJJSR3KDsnSsF0YCw7V28cr_OVAwiPoro90Me6MUz9yKV88gQlTuJkNFMuu_YdPXYKjlzNVg0zFmtUZAkEAoe9mPtDeZD0TmKkSZUVYul1543C_mPTan5_qrWCoZtkd2MtiuWEB3O4DR7ZfPcQ8KcU5pektUn_NEfRndZYUawJBAJfydOoxeawBLQNODfLcYefR59owlYe5SGpktaCw7O596DPqzId_4Vk_qqx4xueXSXOLCabCmcC4yZue0_2vm7ECQQDLrzXL-BpSqxbvtE0gNKcgaSkEUSOh1QmQFPCHERsOBxcflM6ej71STKglB21JD9m6tM2RySgbtUx4TfOuJTek";
-//            String s1 = privateDecryption(ss, getPrivateKey(privateKey1));
-//            System.out.println("解密后明文：" + s1);
+            String s1 = privateDecryption(s, getPrivateKey(privateKey));
+            System.out.println("解密后明文：" + s1);
 
         } catch (Exception e) {
             throw new IllegalArgumentException();
