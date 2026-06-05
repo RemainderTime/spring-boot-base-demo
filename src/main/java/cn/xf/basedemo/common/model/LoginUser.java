@@ -23,4 +23,14 @@ public class LoginUser implements Serializable {
     private String phone;
 
     private String token;
+
+    /**
+     * 角色列表
+     */
+    private java.util.List<String> roles;
+
+    /**
+     * 权限列表
+     */
+    private java.util.List<String> permissions;
 }

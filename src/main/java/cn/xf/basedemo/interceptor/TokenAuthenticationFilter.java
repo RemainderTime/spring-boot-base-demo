@@ -7,8 +7,6 @@ import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.model.RetObj;
 import cn.xf.basedemo.common.utils.ApplicationContextUtils;
 import cn.xf.basedemo.common.utils.RequestHeaderUtil;
-import cn.xf.basedemo.mappers.SysPermissionMapper;
-import cn.xf.basedemo.mappers.SysRoleMapper;
 import com.alibaba.fastjson.JSONObject;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -48,12 +46,6 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 	@Autowired
 	private RedisTemplate redisTemplate;
 
-	@Autowired
-	private SysPermissionMapper sysPermissionMapper;
-
-	@Autowired
-	private SysRoleMapper sysRoleMapper;
-
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 		//登录处理
@@ -89,29 +81,28 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		}finally {
             // 无论请求是否异常，最后一定清理，避免 ThreadLocal 泄漏
             SessionContext.getInstance().clear();
+            SecurityContextHolder.clearContext();
         }
 	}
 	//    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 //    CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
 //    Long userId = user.getUserId(); // 拿到登录用户 ID
 
-	/**
-	 * 设置用户权限角色 （Spring Security 本身的 SecurityContext 是请求级别的，每次请求都会被清理，所以每次请求都会查询权限数据并设置，
-	 * 安全但是很慢，所以可以做一些优化，比如把权限数据放到redis中获取和用户信息一起放在jwt中，然后登录时解析在设置到Spring security上下文中）
-	 * @param loginUserInfo
-	 */
 	private void setSpringSecurityContext(LoginUser loginUserInfo) {
-		//获取登录用户权限数据
-		List<String> permissionList = sysPermissionMapper.getPermissionListByRoleId(loginUserInfo.getId());
-		//获取用户角色数据
-		List<String> roleList = sysRoleMapper.getRoleListByUserId(loginUserInfo.getId());
+		//直接从缓存中获取登录用户权限和角色数据
+		List<String> permissionList = loginUserInfo.getPermissions();
+		List<String> roleList = loginUserInfo.getRoles();
+		List<String> authoritiesList = new java.util.ArrayList<>();
+		if (!CollectionUtils.isEmpty(permissionList)) {
+			authoritiesList.addAll(permissionList);
+		}
 		if (!CollectionUtils.isEmpty(roleList)) {
 			//为角色拼接前缀
-			roleList = roleList.stream().map(role -> "ROLE_" + role).collect(Collectors.toList());
+			List<String> roleAuthorities = roleList.stream().map(role -> "ROLE_" + role).collect(Collectors.toList());
+			authoritiesList.addAll(roleAuthorities);
 		}
-		permissionList.addAll(roleList);
 		//封装用户权限角色
-		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(permissionList);
+		List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(authoritiesList);
 		//设置用户信息到SpringSecurity上下文
 		UserDetails userDetails = new CustomUserDetails(loginUserInfo.getId(), loginUserInfo.getPhone(), authorities);
 		UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

@@ -6,6 +6,8 @@ import cn.xf.basedemo.common.model.RetObj;
 import cn.xf.basedemo.common.utils.JwtTokenUtils;
 import cn.xf.basedemo.common.utils.RSAUtils;
 import cn.xf.basedemo.config.GlobalConfig;
+import cn.xf.basedemo.mappers.SysPermissionMapper;
+import cn.xf.basedemo.mappers.SysRoleMapper;
 import cn.xf.basedemo.mappers.UserMapper;
 import cn.xf.basedemo.model.domain.User;
 import cn.xf.basedemo.model.res.LoginInfoRes;
@@ -46,6 +48,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private SysPermissionMapper sysPermissionMapper;
+
+    @Autowired
+    private SysRoleMapper sysRoleMapper;
+
     @Override
     public RetObj login(LoginInfoRes res) {
 
@@ -83,6 +91,10 @@ public class UserServiceImpl implements UserService {
 
         String token = JwtTokenUtils.createToken(user.getId());
         loginUser.setToken(token);
+
+        // 获取并缓存角色与权限数据到 Redis 避免后续过滤器的重复查库性能开销
+        loginUser.setPermissions(sysPermissionMapper.getPermissionListByRoleId(user.getId()));
+        loginUser.setRoles(sysRoleMapper.getRoleListByUserId(user.getId()));
 
         redisTemplate.opsForValue().set("token:" + token, JSONObject.toJSONString(loginUser), 3600, TimeUnit.SECONDS);
         redisTemplate.opsForValue().set("user_login_token:" + user.getId(), token, 3600, TimeUnit.SECONDS);
