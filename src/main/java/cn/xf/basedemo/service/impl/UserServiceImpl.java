@@ -1,13 +1,10 @@
 package cn.xf.basedemo.service.impl;
 
-import cn.xf.basedemo.common.model.EsBaseModel;
 import cn.xf.basedemo.common.model.LoginInfo;
 import cn.xf.basedemo.common.model.LoginUser;
 import cn.xf.basedemo.common.model.RetObj;
-import cn.xf.basedemo.common.utils.EsUtil;
 import cn.xf.basedemo.common.utils.JwtTokenUtils;
 import cn.xf.basedemo.common.utils.RSAUtils;
-import cn.xf.basedemo.common.utils.StringUtil;
 import cn.xf.basedemo.config.GlobalConfig;
 import cn.xf.basedemo.mappers.UserMapper;
 import cn.xf.basedemo.model.domain.User;
@@ -52,7 +49,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public RetObj login(LoginInfoRes res) {
 
-        if (Objects.isNull(res) || StringUtils.isEmpty(res.getEncryptedData())) {
+        if (Objects.isNull(res) || !StringUtils.hasText(res.getEncryptedData())) {
             return null;
         }
         String loginJson = "";
@@ -68,15 +65,14 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             return RetObj.error("账号或密码错误");
         }
-        if (!StringUtils.isEmpty(loginInfo.check())) {
+        if (StringUtils.hasText(loginInfo.check())) {
             return RetObj.error(loginInfo.check());
         }
         //校验登录账号密码
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("account", loginInfo.getAccount());
-        queryWrapper.eq("password", loginInfo.getPwd());
         User user = userMapper.selectOne(queryWrapper);
-        if (Objects.isNull(user)) {
+        if (Objects.isNull(user) || !loginInfo.getPwd().equals(user.getPassword())) {
             return RetObj.error("账号或密码错误");
         }
         LoginUser loginUser = new LoginUser();
@@ -93,26 +89,4 @@ public class UserServiceImpl implements UserService {
         return RetObj.success(loginUser);
     }
 
-    @Override
-    public RetObj syncEs(Long userId) {
-        User user = userMapper.selectById(userId);
-        if (Objects.isNull(user)) {
-            return RetObj.error("用户不存在");
-        }
-        String index = StringUtil.camelToKebabCase(user.getClass().getSimpleName());
-        if (!EsUtil.existIndex(index)) {
-            EsUtil.createIndex(index);
-        }
-        EsUtil.addDocument(new EsBaseModel(index, String.valueOf(user.getId()), user, user.getClass()));
-        return RetObj.success();
-    }
-
-    @Override
-    public RetObj getEsId(Long userId) {
-        Object user = EsUtil.getDocumentById(new EsBaseModel("user", String.valueOf(userId), null, User.class));
-        if(Objects.nonNull(user)){
-            return RetObj.success(user);
-        }
-        return RetObj.error("es中不存在该用户");
-    }
 }

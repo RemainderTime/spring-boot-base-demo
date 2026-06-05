@@ -1,5 +1,6 @@
 package cn.xf.basedemo.common.exception;
 
+import cn.xf.basedemo.common.enums.SystemStatus;
 import lombok.Getter;
 
 /**
@@ -10,29 +11,29 @@ import lombok.Getter;
  */
 @Getter
 public class BusinessException extends RuntimeException{
-    private final ResponseCode code;
+    private final SystemStatus status;
 
     public BusinessException() {
-        super(String.format("%s", ResponseCode.INTERNAL_ERROR.getMessage()));
-        this.code = ResponseCode.INTERNAL_ERROR;
+        super(String.format("%s", SystemStatus.ERROR.getErrorMessage()));
+        this.status = SystemStatus.ERROR;
     }
 
     public BusinessException(Throwable e) {
         super(e);
-        this.code = ResponseCode.INTERNAL_ERROR;
+        this.status = SystemStatus.ERROR;
     }
 
     public BusinessException(String msg) {
-        this(ResponseCode.INTERNAL_ERROR, msg);
+        this(SystemStatus.ERROR, msg);
     }
 
-    public BusinessException(ResponseCode code) {
-        super(String.format("%s", code.getMessage()));
-        this.code = code;
+    public BusinessException(SystemStatus status) {
+        super(String.format("%s", status.getErrorMessage()));
+        this.status = status;
     }
 
-    public BusinessException(ResponseCode code, String msg) {
+    public BusinessException(SystemStatus status, String msg) {
         super(msg);
-        this.code = code;
+        this.status = status;
     }
 }

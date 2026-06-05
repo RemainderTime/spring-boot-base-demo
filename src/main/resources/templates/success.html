@@ -1,46 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
-    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
     <title>登录成功</title>
 </head>
-
 <body>
 <div id="app">
-    <h1>欢迎 {{name}} 登录成功~~</h1>
+    <h1>欢迎 <span id="name"></span> 登录成功~~</h1>
     <h1>
         token:
-        <span style="color: forestgreen">{{token}}</span>
+        <span id="token" style="color: forestgreen"></span>
     </h1>
 </div>
 
-</body>
 <script>
-    new Vue({
-        el: '#app',
-        data: {
-            token: '',
-            name: ''
-        },
-        mounted: function () {
+    function getQueryParam(name) {
+        var params = new URLSearchParams(window.location.search);
+        return params.get(name) || '';
+    }
 
-            this.token = this.getData("token");
-            //只需要转一次码
-            this.name = decodeURI(this.getData("name"));
-        },
-        methods: {
-            getData: function (name) {
-                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
-                var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+    var token = getQueryParam('token');
+    var name = getQueryParam('name');
 
-                if (r != null) return unescape(r[2]);
-                window.location.href = "login"
-                // return null; //返回参数值
-            }
-        }
-    })
-    ;
+    if (!token || !name) {
+        window.location.href = 'login';
+    } else {
+        document.getElementById('token').textContent = token;
+        document.getElementById('name').textContent = decodeURIComponent(name);
+    }
 </script>
+</body>
 </html>
