@@ -12,6 +12,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import cn.xf.basedemo.common.enums.SystemStatus;
+import cn.xf.basedemo.common.model.RetObj;
+import com.alibaba.fastjson.JSONObject;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Description: spring security体系 全局跨域配置
@@ -28,9 +32,26 @@ public class SpringSecurityConfig {
                 .cors(Customizer.withDefaults())  // 开启 CORS
                 .csrf(AbstractHttpConfigurer::disable) //前后端分离 禁用csrf
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user/login", "/web/login").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/doc.html", "/webjars/**", "/swagger-resources/**").permitAll()
                         .anyRequest().authenticated()
                 )  // 把自定义过滤器插入 Spring Security 过滤器链
-                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json;charset=UTF-8");
+                            RetObj<Void> retObj = new RetObj<>(SystemStatus.UNAUTHORIZED.getCode(), "未登录或Token失效");
+                            response.getWriter().write(JSONObject.toJSONString(retObj));
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                            response.setContentType("application/json;charset=UTF-8");
+                            RetObj<Void> retObj = new RetObj<>(SystemStatus.FORBIDDEN.getCode(), "没有权限访问该资源");
+                            response.getWriter().write(JSONObject.toJSONString(retObj));
+                        })
+                );
         return http.build();
     }
 

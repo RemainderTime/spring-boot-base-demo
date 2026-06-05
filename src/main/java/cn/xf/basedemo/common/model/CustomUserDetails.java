@@ -44,6 +44,6 @@ public class CustomUserDetails implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return null;
+		return phone != null ? phone : (userId != null ? String.valueOf(userId) : null);
 	}
 }

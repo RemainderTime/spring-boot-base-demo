@@ -1,10 +1,12 @@
 package cn.xf.basedemo.interceptor;
 
+import cn.xf.basedemo.common.enums.SystemStatus;
 import cn.xf.basedemo.common.exception.LoginException;
-import cn.xf.basedemo.common.exception.ResponseCode;
 import cn.xf.basedemo.common.model.CustomUserDetails;
 import cn.xf.basedemo.common.model.LoginUser;
+import cn.xf.basedemo.common.model.RetObj;
 import cn.xf.basedemo.common.utils.ApplicationContextUtils;
+import cn.xf.basedemo.common.utils.RequestHeaderUtil;
 import cn.xf.basedemo.mappers.SysPermissionMapper;
 import cn.xf.basedemo.mappers.SysRoleMapper;
 import com.alibaba.fastjson.JSONObject;
@@ -63,12 +65,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 				filterChain.doFilter(request, response);
 				return;
 			}
-			String token = request.getHeader("Authorization");
-			if (StringUtils.isEmpty(token))
-				token = request.getParameter("token");
-			if (StringUtils.isEmpty(token)) {
-				throw new LoginException("请先登录");
-			}
+			String token = RequestHeaderUtil.getToken(request);
 			String value = (String) redisTemplate.opsForValue().get("token:" + token);
 			if (StringUtils.isEmpty(value)) {
 				throw new LoginException();
@@ -77,9 +74,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 			//JSON对象转换成Java对象
 			LoginUser loginUserInfo = JSONObject.toJavaObject(jsonObject, LoginUser.class);
 			if (loginUserInfo == null || loginUserInfo.getId() <= 0) {
-				throw new LoginException(ResponseCode.USER_INPUT_ERROR);
+				throw new LoginException(SystemStatus.USER_INPUT_ERROR);
 			}
-			redisTemplate.expire(token, 86700, TimeUnit.SECONDS);
+			redisTemplate.expire("token:" + token, 86700, TimeUnit.SECONDS);
 			//用户信息设置到上下文(如果使用Spring security 也可设置登录用户上下文数据，下面就可不用自定义设置)
 			SessionContext.getInstance().set(loginUserInfo);
 			//设置用户权限角色
@@ -88,7 +85,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 		}catch (LoginException e) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.setContentType("application/json;charset=UTF-8");
-			response.getWriter().write("{\"message\":\"" + e.getMessage() + "\"}");
+			response.getWriter().write(JSONObject.toJSONString(new RetObj<>(e.getStatus().getCode(), e.getMessage())));
 		}finally {
             // 无论请求是否异常，最后一定清理，避免 ThreadLocal 泄漏
             SessionContext.getInstance().clear();

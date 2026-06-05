@@ -47,18 +47,7 @@ public class UserController {
         return RetObj.success(user);
     }
 
-    @Operation(summary = "es同步用户信息", description = "用户信息")
-    @GetMapping("/syncEs")
-    @PreAuthorize("hasRole('admin')") // 角色控制
-    public RetObj syncEs(Long userId){
-        return userService.syncEs(userId);
-    }
 
-    @Operation(summary = "es查询用户信息", description = "用户信息")
-    @GetMapping("/getEsId")
-    public RetObj getEsId(Long userId){
-        return userService.getEsId(userId);
-    }
     @Operation(summary = "获取用户权限数据", description = "用户信息")
     @GetMapping("/getPermission")
     public RetObj getPermission(){
